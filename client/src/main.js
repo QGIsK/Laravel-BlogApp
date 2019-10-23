@@ -40,7 +40,7 @@ Vue.filter("formatFullDate", function(value) {
 Vue.prototype.$http = Axios;
 
 if (!process.env.NODE_ENV || process.env.NODE_ENV == "development") {
-    Vue.prototype.$http.defaults.baseURL = "http://localhost:8000";
+    Vue.prototype.$http.defaults.baseURL = "http://127.0.0.1:8000";
 }
 
 if (token) {

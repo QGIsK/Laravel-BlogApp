@@ -150,14 +150,14 @@ export default new Vuex.Store({
 				})
 					.then(resp => {
 						const token = resp.data.token;
-						const user = {
-							id: resp.data.user._id,
-							name: resp.data.user.name,
-							email: resp.data.user.email,
-							socials: resp.data.user.socials,
-							isEditor: resp.data.user.isEditor,
-							isAdmin: resp.data.user.isAdmin,
-						};
+						// const user = {
+						// 	id: resp.data.user._id,
+						// 	name: resp.data.user.name,
+						// 	email: resp.data.user.email,
+						// 	socials: resp.data.user.socials,
+						// 	isEditor: resp.data.user.isEditor,
+						// 	isAdmin: resp.data.user.isAdmin,
+						// };
 
 						let payload = {
 							type: "success",
@@ -165,7 +165,7 @@ export default new Vuex.Store({
 						};
 
 						localStorage.setItem("token", token);
-						localStorage.setItem("user", JSON.stringify(user));
+						// localStorage.setItem("user", JSON.stringify(user));
 						axios.defaults.headers.common["Authorization"] = token;
 						commit("toggleSnackBar", payload);
 						commit("auth_success", {
@@ -175,6 +175,7 @@ export default new Vuex.Store({
 						resolve(resp);
 					})
 					.catch(err => {
+						console.log(err)
 						commit("auth_error", err);
 						localStorage.removeItem("token");
 						reject(err);
