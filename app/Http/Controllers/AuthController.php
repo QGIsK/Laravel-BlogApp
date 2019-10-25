@@ -15,25 +15,32 @@ class AuthController extends Controller
             'email' => 'required|email|unique:users',
             'password'  => 'required|min:3|confirmed',
         ]);
+
         if ($v->fails()) {
             return response()->json([
                 'status' => 'error',
                 'errors' => $v->errors()
             ], 422);
         }
-        $user = new User;
-        $user->name = $request->name;
-        $user->email = $request->email;
-        $user->password = bcrypt($request->password);
-        $user->save();
-        return response()->json(['status' => 'success'], 200);
+
+        $newUser = new User;
+        $newUser->name = $request->name;
+        $newUser->email = $request->email;
+        $newUser->password = bcrypt($request->password);
+        $newUser->save();
+
+        $credentials = $request->only('email', 'password');
+        $token = $this->guard()->attempt($credentials);
+        $user = $this->guard()->user();
+        return response()->json(['status' => 'success', 'token' => $token, 'user' => [$user]], 200)->header('Authorization', $token);
     }
 
     public function login(Request $request)
     {
         $credentials = $request->only('email', 'password');
         if ($token = $this->guard()->attempt($credentials)) {
-            return response()->json(['status' => 'success', 'token' => $token], 200)->header('Authorization', $token);
+            $user = $this->guard()->user();
+            return response()->json(['status' => 'success', 'token' => $token, 'user' => [$user]], 200)->header('Authorization', $token);
         }
         return response()->json(['error' => 'Invalid Credentials'], 401);
     }
