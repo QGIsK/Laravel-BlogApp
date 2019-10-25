@@ -33,3 +33,11 @@ Route::group(['middleware' => 'auth:api'], function () {
     Route::get('users', 'UserController@index')->middleware('isAdmin');
     Route::get('users/{id}', 'UserController@show')->middleware('isAdminOrSelf');
 });
+
+Route::prefix('post')->group(function () {
+    Route::get('/', 'PostController@index');
+    Route::get('/{id}', 'PostController@post');
+
+    // Route::group(['middleware' => ''])
+
+});
