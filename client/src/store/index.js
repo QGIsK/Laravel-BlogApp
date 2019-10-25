@@ -150,14 +150,12 @@ export default new Vuex.Store({
 				})
 					.then(resp => {
 						const token = resp.data.token;
-						// const user = {
-						// 	id: resp.data.user._id,
-						// 	name: resp.data.user.name,
-						// 	email: resp.data.user.email,
-						// 	socials: resp.data.user.socials,
-						// 	isEditor: resp.data.user.isEditor,
-						// 	isAdmin: resp.data.user.isAdmin,
-						// };
+						const user = {
+							id: resp.data.user[0].id,
+							name: resp.data.user[0].name,
+							email: resp.data.user[0].email,
+							role: resp.data.user[0].role
+						};
 
 						let payload = {
 							type: "success",
@@ -165,7 +163,7 @@ export default new Vuex.Store({
 						};
 
 						localStorage.setItem("token", token);
-						// localStorage.setItem("user", JSON.stringify(user));
+						localStorage.setItem("user", JSON.stringify(user));
 						axios.defaults.headers.common["Authorization"] = token;
 						commit("toggleSnackBar", payload);
 						commit("auth_success", {
@@ -194,12 +192,10 @@ export default new Vuex.Store({
 					.then(resp => {
 						const token = resp.data.token;
 						const user = {
-							id: resp.data.user._id,
-							name: resp.data.user.name,
-							email: resp.data.user.email,
-							socials: resp.data.user.socials,
-							editor: resp.data.user.isEditor,
-							admin: resp.data.user.isAdmin,
+							id: resp.data.user[0].id,
+							name: resp.data.user[0].name,
+							email: resp.data.user[0].email,
+							role: resp.data.user[0].role
 						};
 
 						let payload = {
@@ -261,12 +257,12 @@ export default new Vuex.Store({
 		snackbarText: state => state.snackbarText,
 		snackbarType: state => state.snackbarType,
 		isAdmin: state => {
-			if (!state.user.isAdmin) return false;
-			return state.user.isAdmin;
+			if (state.user.role >= 3) return true;
+			else return false;
 		},
 		isEditor: state => {
-			if (!state.user.isEditor) return false;
-			return state.user.isEditor;
+			if (state.user.role >= 2) return true;
+			else return false;
 		},
 	},
 });
