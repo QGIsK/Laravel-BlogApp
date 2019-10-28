@@ -22,27 +22,44 @@ class AuthController extends Controller
                 'errors' => $v->errors()
             ], 422);
         }
+        $user = User::create([
+            'name' => $request->name,
+            'email' => $request->email,
+            'password' => bcrypt($request->password),
+        ]);
 
-        $newUser = new User;
-        $newUser->name = $request->name;
-        $newUser->email = $request->email;
-        $newUser->password = bcrypt($request->password);
-        $newUser->save();
+        $token = auth()->login($user);
 
-        $credentials = $request->only('email', 'password');
-        $token = $this->guard()->attempt($credentials);
-        $user = $this->guard()->user();
-        return response()->json(['status' => 'success', 'token' => $token, 'user' => [$user]], 200)->header('Authorization', $token);
+        return $this->respondWithToken($token);
+        // $newUser = new User;
+        // $newUser->name = $request->name;
+        // $newUser->email = $request->email;
+        // $newUser->password = bcrypt($request->password);
+        // $newUser->save();
+
+        // $credentials = $request->only('email', 'password');
+        // $token = $this->guard()->attempt($credentials);
+        // $user = $this->guard()->user();
+        // return response()->json(['status' => 'success', 'token' => $token, 'user' => [$user]], 200)->header('Authorization', $token);
+
+
     }
 
     public function login(Request $request)
     {
-        $credentials = $request->only('email', 'password');
-        if ($token = $this->guard()->attempt($credentials)) {
-            $user = $this->guard()->user();
-            return response()->json(['status' => 'success', 'token' => $token, 'user' => [$user]], 200)->header('Authorization', $token);
+        $credentials = $request->only(['email', 'password']);
+
+        if (!$token = auth()->attempt($credentials)) {
+            return response()->json(['error' => 'Unauthorized'], 401);
         }
-        return response()->json(['error' => 'Invalid Credentials'], 401);
+
+        return $this->respondWithToken($token);
+        // $credentials = $request->only('email', 'password');
+        // if ($token = $this->guard()->attempt($credentials)) {
+        //     $user = $this->guard()->user();
+        //     return response()->json(['status' => 'success', 'token' => $token, 'user' => [$user]], 200)->header('Authorization', $token);
+        // }
+        // return response()->json(['error' => 'Invalid Credentials'], 401);
     }
 
     public function logout()
@@ -71,6 +88,15 @@ class AuthController extends Controller
                 ->header('Authorization', $token);
         }
         return response()->json(['error' => 'refresh_token_error'], 401);
+    }
+
+    protected function respondWithToken($token)
+    {
+        return response()->json([
+            'access_token' => $token,
+            'token_type' => 'bearer',
+            'expires_in' => auth()->factory()->getTTL() * 60
+        ]);
     }
 
     private function guard()
