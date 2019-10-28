@@ -16,11 +16,11 @@ class CreatePostsTable extends Migration
         Schema::create('posts', function (Blueprint $table) {
             $table->bigIncrements('id');
             $table->timestamps();
+            $table->unsignedInteger('user_id');
             $table->string("title");
             $table->string("body");
-            $table->boolean("allowComments");
-            $table->boolean("premiumPost");
-            $table->integer("weekNumber");
+            $table->boolean("allowComments")->default(false);
+            $table->boolean("premiumPost")->default(false);
             $table->string("image");
         });
     }
