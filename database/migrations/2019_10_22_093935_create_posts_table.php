@@ -18,10 +18,9 @@ class CreatePostsTable extends Migration
             $table->timestamps();
             $table->unsignedInteger('user_id');
             $table->string("title");
-            $table->string("body");
-            $table->boolean("allowComments")->default(false);
-            $table->boolean("premiumPost")->default(false);
-            $table->string("image");
+            $table->longText("body");
+            $table->boolean("allowComments")->default(1);
+            $table->string("image")->nullable();
         });
     }
 
