@@ -10,9 +10,8 @@ class Post extends Model
     protected $fillable = [
         'title',
         'body',
-        'author_id',
+        'user_id',
         'allowComments',
-        'premiumPost',
         'weekNumber',
         'image',
     ];
