@@ -24,7 +24,6 @@ class PostResource extends JsonResource
             'allowComments' => $this->allowComments,
             'premiumPost' => $this->premiumPost,
             'image' => $this->image,
-            'ratings' => $this->ratings,
         ];
     }
 }
