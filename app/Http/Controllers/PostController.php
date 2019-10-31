@@ -26,17 +26,16 @@ class PostController extends Controller
      */
     public function store(Request $request)
     {
-        //return  response()->json($request->user()->id);
+        if ($request->user()->role == 1) {
+            return response()->json(['error' => 'You don\'t have permissions to do this.'], 403);
+        }
 
         $post = Post::create([
             'user_id' => $request->user()->id,
             'title' => $request->title,
             'body' => $request->body,
-            'allowComments' => $request->allowComments,
-            'premiumPost' => $request->premiumPost,
             'image' => $request->image,
         ]);
-        dd('test');
 
         return new PostResource($post);
     }
@@ -61,9 +60,8 @@ class PostController extends Controller
      */
     public function update(Request $request, Post $post)
     {
-        // check if currently authenticated user is the owner of the book
-        if ($request->user()->id !== $post->user_id) {
-            return response()->json(['error' => 'You can only edit your own post.'], 403);
+        if ($request->user()->role == 1) {
+            return response()->json(['error' => 'You don\'t have permissions to do this.'], 403);
         }
 
         $post->update($request->only(['title', 'description']));
@@ -73,9 +71,10 @@ class PostController extends Controller
 
     public function destroy(Request $request, Post $post)
     {
-        if ($request->user()->id !== $post->user_id) {
-            return response()->json(['error' => 'You can only edit your own post.'], 403);
+        if ($request->user()->role == 1) {
+            return response()->json(['error' => 'You don\'t have permissions to do this.'], 403);
         }
+
         $post->delete();
 
         return response()->json(null, 204);
