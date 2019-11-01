@@ -10,29 +10,28 @@
       </v-toolbar>
       <v-list dense>
         <span>
-          <v-list-tile v-for="category in allCategories" :key="category._id">
+          <v-list-tile v-for="category in allCategories" :key="category.id">
             <v-switch
               color="indigo darken-3"
               v-model="activeFilters"
               :label="category.name"
-              :value="category._id"
+              :value="category.id"
             ></v-switch>
           </v-list-tile>
         </span>
       </v-list>
     </v-navigation-drawer>
-    <shareModal />
 
     <v-flex xs16 sm10>
       <v-container fluid grid-list-md mt-2>
         <v-layout row wrap v-if="Object.keys(allPosts).length">
-          <v-flex v-for="post in allPosts" :key="post._id" v-bind="{ [`${post._id}`]: true }">
+          <v-flex v-for="post in allPosts" :key="post.id" v-bind="{ [`${post.id}`]: true }">
             <v-card class="my-1 mx-1">
               <v-img
                 style="cursor: pointer"
                 :src="post.image"
                 height="250px"
-                @click="postRedirect(post._id)"
+                @click="postRedirect(post.id)"
               >
                 <v-container fill-height fluid pa-2>
                   <v-layout fill-height>
@@ -44,7 +43,7 @@
                       <span
                         class="grey--text"
                         v-for="category in post.categories"
-                        :key="category._id"
+                        :key="category.id"
                       >{{category.name}}&nbsp;</span>
                     </v-flex>
                   </v-layout>
@@ -64,9 +63,6 @@
                 <v-btn icon>
                   <!-- <v-icon>bookmark</v-icon> -->
                 </v-btn>
-                <v-btn icon>
-                  <v-icon @click="toggleShareModal(post._id)">share</v-icon>
-                </v-btn>
               </v-card-actions>
             </v-card>
           </v-flex>
@@ -77,47 +73,40 @@
 </template>
 
 <script>
-import shareModal from "../modals/share";
-
 export default {
-    name: "FilterPosts",
-    components: {
-        shareModal,
+  name: "FilterPosts",
+  components: {},
+  data() {
+    const self = this;
+    return {
+      activeFilters: []
+    };
+  },
+  computed: {
+    allPosts: {
+      get() {
+        if (this.activeFilters.length)
+          return this.$store.getters.posts.filter(post =>
+            post.categories.find(categorie =>
+              this.activeFilters.includes(categorie.id)
+            )
+          );
+        return this.$store.getters.posts;
+      }
     },
-    data() {
-        const self = this;
-        return {
-            activeFilters: [],
-        };
+    allCategories: {
+      get() {
+        return this.$store.getters.categories;
+      }
+    }
+  },
+  methods: {
+    postRedirect(id) {
+      this.$router.push(`/post/${id}`);
     },
-    computed: {
-        allPosts: {
-            get() {
-                if (this.activeFilters.length)
-                    return this.$store.getters.posts.filter(post =>
-                        post.categories.find(categorie => this.activeFilters.includes(categorie._id))
-                    );
-                return this.$store.getters.posts;
-            },
-        },
-        allCategories: {
-            get() {
-                return this.$store.getters.categories;
-            },
-        },
-    },
-    methods: {
-        toggleShareModal(post) {
-            this.$store.dispatch("toggleShareModal", {
-                post,
-            });
-        },
-        postRedirect(id) {
-            this.$router.push(`/post/${id}`);
-        },
-        userRedirect(id) {
-            this.$router.push(`/user/${id}`);
-        },
-    },
+    userRedirect(id) {
+      this.$router.push(`/user/${id}`);
+    }
+  }
 };
 </script>

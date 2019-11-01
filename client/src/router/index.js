@@ -9,8 +9,6 @@ import showPost from "../components/post/showPost.vue";
 import myPosts from "../components/post/myPosts.vue";
 import UserProfile from "../components/user/Profile.vue";
 import FilterPosts from "../components/post/Filter.vue";
-import Tos from "../components/legal/Tos.vue";
-import Privacy from "../components/legal/Privacy.vue";
 
 Vue.use(Router);
 
@@ -41,16 +39,6 @@ let router = new Router({
 			path: "/user/:id",
 			name: "UserProfile",
 			component: UserProfile,
-		},
-		{
-			path: "/legal/terms-of-service",
-			name: "tos",
-			component: Tos,
-		},
-		{
-			path: "/legal/privacy-policy",
-			name: "Privacy",
-			component: Privacy,
 		},
 	],
 });

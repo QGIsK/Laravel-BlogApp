@@ -22,18 +22,18 @@
       <span>
         <v-subheader class="mt-5 gray--text font-weight-bold text--darken-1">LATEST POSTS</v-subheader>
         <span v-if="Object.keys(Posts).length">
-          <v-list-tile v-for="post in Posts.slice(0,8)" v-bind:key="post._id" class="my-2">
-            <v-list-tile-avatar style="cursor: pointer" @click="postRedirect(post._id)">
+          <v-list-tile v-for="post in Posts.slice(0,8)" v-bind:key="post.id" class="my-2">
+            <v-list-tile-avatar style="cursor: pointer" @click="postRedirect(post.id)">
               <img :src="post.image">
             </v-list-tile-avatar>
             <v-list-tile-content>
               <v-list-tile-title
                 style="cursor: pointer"
-                @click="postRedirect(post._id)"
+                @click="postRedirect(post.id)"
               >{{ post.title }}</v-list-tile-title>
               <v-list-tile-sub-title
                 style="cursor: pointer"
-                @click="userRedirect(post.user._id)"
+                @click="userRedirect(post.user.id)"
               >By {{post.user.name}}</v-list-tile-sub-title>
             </v-list-tile-content>
           </v-list-tile>

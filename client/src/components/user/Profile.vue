@@ -11,7 +11,7 @@
                   {{user.name}}
                   <span v-if="user.isEditor">/</span>
                   <span v-if="user.isAdmin">/</span>
-                  <br>
+                  <br />
                 </span>
               </v-flex>
             </v-layout>
@@ -21,7 +21,7 @@
           <div>
             <span>{{user.about}}</span>
             <span class="grey--text">
-              <br>
+              <br />
               Joined: {{user.join_date | formatDate}}
             </span>
           </div>
@@ -43,12 +43,12 @@
 
         <v-list-tile
           v-for="post in userPosts.slice(0, 8)"
-          @click="postRedirect(post._id)"
-          v-bind:key="post._id"
+          @click="postRedirect(post.id)"
+          v-bind:key="post.id"
           class="my-4"
         >
           <v-list-tile-avatar>
-            <img :src="post.image">
+            <img :src="post.image" />
           </v-list-tile-avatar>
           <v-list-tile-content>
             <v-list-tile-title>{{ post.title }}</v-list-tile-title>
@@ -62,46 +62,46 @@
 
 <script>
 export default {
-    name: "UserProfile",
-    data() {
-        const self = this;
-        return {
-            user: {},
-            userPosts: {},
-            currentUserId: self.$store.getters.userId,
-        };
+  name: "UserProfile",
+  data() {
+    const self = this;
+    return {
+      user: {},
+      userPosts: {},
+      currentUserId: self.$store.getters.userId
+    };
+  },
+  mounted() {
+    this.getUser(this.$route.params.id);
+    this.getUserPosts(this.$route.params.id);
+  },
+  computed: {
+    isUser() {
+      return this.currentUserId === this.user.id;
+    }
+  },
+  methods: {
+    getUser(id) {
+      this.$http({
+        url: `/api/user/${id}`,
+        crossdomain: true,
+        method: "GET"
+      }).then(res => {
+        this.user = res.data.user;
+      });
     },
-    mounted() {
-        this.getUser(this.$route.params.id);
-        this.getUserPosts(this.$route.params.id);
+    getUserPosts(id) {
+      this.$http({
+        url: `/api/user/${id}/posts`,
+        crossdomain: true,
+        method: "GET"
+      }).then(res => {
+        this.userPosts = res.data.posts;
+      });
     },
-    computed: {
-        isUser() {
-            return this.currentUserId === this.user._id;
-        },
-    },
-    methods: {
-        getUser(id) {
-            this.$http({
-                url: `/api/user/${id}`,
-                crossdomain: true,
-                method: "GET",
-            }).then(res => {
-                this.user = res.data.user;
-            });
-        },
-        getUserPosts(id) {
-            this.$http({
-                url: `/api/user/${id}/posts`,
-                crossdomain: true,
-                method: "GET",
-            }).then(res => {
-                this.userPosts = res.data.posts;
-            });
-        },
-        postRedirect(id) {
-            this.$router.push(`/post/${id}`);
-        },
-    },
+    postRedirect(id) {
+      this.$router.push(`/post/${id}`);
+    }
+  }
 };
 </script>

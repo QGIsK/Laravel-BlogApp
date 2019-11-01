@@ -84,12 +84,12 @@
           </v-list-tile>
           <v-subheader style="margin-top: 25px;" class="title">Categories</v-subheader>
 
-          <v-list-tile v-for="category in allCategories" :key="category._id">
+          <v-list-tile v-for="category in allCategories" :key="category.id">
             <v-switch
               color="primary darken-3"
               v-model="user.digest_categories"
               :label="category.name"
-              :value="category._id"
+              :value="category.id"
             ></v-switch>
           </v-list-tile>
           <v-list-tile></v-list-tile>

@@ -106,12 +106,12 @@
 
           <v-subheader style="margin-top: 25px;" class="title">Categories</v-subheader>
           <v-divider></v-divider>
-          <v-list-tile v-for="category in allCategories" :key="category._id">
+          <v-list-tile v-for="category in allCategories" :key="category.id">
             <v-switch
               color="primary darken-3"
               v-model="categories"
               :label="category.name"
-              :value="category._id"
+              :value="category.id"
             ></v-switch>
           </v-list-tile>
 

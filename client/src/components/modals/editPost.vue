@@ -106,12 +106,12 @@
 
           <v-subheader style="margin-top: 25px;" class="title">Categories</v-subheader>
           <v-divider></v-divider>
-          <v-list-tile v-for="category in allCategories" :key="category._id">
+          <v-list-tile v-for="category in allCategories" :key="category.id">
             <v-switch
               color="primary darken-3"
               v-model="newCategories"
               :label="category.name"
-              :value="category._id"
+              :value="category.id"
             ></v-switch>
           </v-list-tile>
           <v-btn flat @click="toggleAddCategoryModal">Update categories</v-btn>
@@ -183,14 +183,14 @@ export default {
                 maxFiles: 1,
                 headers: { Authorization: localStorage.getItem("token") },
             },
-            // newCategories: this.post.categories.map(a => a._id),
+            // newCategories: this.post.categories.map(a => a.id),
         };
     },
     mounted() {},
     computed: {
         newCategories: {
             get() {
-                return this.post.categories.map(a => a._id);
+                return this.post.categories.map(a => a.id);
             },
             set(val) {
                 return val;
@@ -264,7 +264,7 @@ export default {
                 allowComments: this.allowComments,
             };
             this.$http({
-                url: `/api/post/${this.post._id}/edit`,
+                url: `/api/post/${this.post.id}/edit`,
                 crossdomain: true,
                 data,
                 method: "POST",
@@ -276,8 +276,8 @@ export default {
                     this.post.allowComments = data.allowComments;
                     this.post.categories = [];
                     for (let i = 0; i < this.newCategories.length; i++) {
-                        let index = this.allCategories.findIndex(x => x._id == this.newCategories[i]);
-                        if (this.allCategories[index]._id === this.newCategories[i]) {
+                        let index = this.allCategories.findIndex(x => x.id == this.newCategories[i]);
+                        if (this.allCategories[index].id === this.newCategories[i]) {
                             this.post.categories.push(this.allCategories[index]);
                         }
                     }
@@ -289,7 +289,7 @@ export default {
                     this.$store.dispatch("toggleSnackBar", payload);
 
                     // Update global posts array
-                    let i = this.posts.findIndex(x => x._id == res.data.post._id);
+                    let i = this.posts.findIndex(x => x.id == res.data.post.id);
                     this.posts[i] = res.data.post;
                 })
                 .catch(e => {

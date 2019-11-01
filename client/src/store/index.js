@@ -19,8 +19,6 @@ export default new Vuex.Store({
 		editPostModal: false,
 		addCategoryModal: false,
 		filterModal: false,
-		shareModal: false,
-		sharePost: "",
 		newPostModal: false,
 		snackbarActive: false,
 		snackbarText: "",
@@ -61,10 +59,6 @@ export default new Vuex.Store({
 		toggleFilterModal(state) {
 			state.filterModal = !state.filterModal;
 		},
-		toggleShareModal(state, { post }) {
-			state.shareModal = !state.shareModal;
-			state.sharePost = post;
-		},
 		toggleAddCategoryModal(state) {
 			state.addCategoryModal = !state.addCategoryModal;
 		},
@@ -84,10 +78,11 @@ export default new Vuex.Store({
 		getPosts({ commit }) {
 			axios({ url: "/api/post", crossDomain: true, method: "GET" })
 				.then(res => {
-					commit("getPosts", { posts: res.data.posts });
+					console.log(res.data.data)
+					commit("getPosts", { posts: res.data.data });
+					
 				})
 				.catch(e => {
-					console.log(e);
 					let payload = {
 						type: "error",
 						text: "An error occured",
@@ -118,11 +113,6 @@ export default new Vuex.Store({
 		},
 		toggleAddCategoryModal({ commit }) {
 			commit("toggleAddCategoryModal");
-		},
-		toggleShareModal({ commit }, { post }) {
-			commit("toggleShareModal", {
-				post,
-			});
 		},
 		toggleNewPostModal({ commit }) {
 			commit("toggleNewPostModal");
@@ -251,8 +241,6 @@ export default new Vuex.Store({
 		editPostModalActive: state => state.editPostModal,
 		AddCategoryActive: state => state.addCategoryModal,
 		mySettingsActive: state => state.mySetingsModal,
-		sharePost: state => state.sharePost,
-		shareActive: state => state.shareModal,
 		snackbarActive: state => state.snackbarActive,
 		snackbarText: state => state.snackbarText,
 		snackbarType: state => state.snackbarType,

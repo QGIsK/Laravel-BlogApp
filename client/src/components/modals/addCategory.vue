@@ -11,20 +11,20 @@
                 <v-text-field label="Add Category" v-model="name" required></v-text-field>
               </v-flex>
             </v-layout>
-            <v-card class="mt-2 mb-3" v-for="category in allCategories" :key="category._id">
+            <v-card class="mt-2 mb-3" v-for="category in allCategories" :key="category.id">
               <v-card-text>
                 <div>
                   {{category.name}}
                   <v-btn flat icon>
                     <v-icon
                       style="font-size: 17.5px;"
-                      @click.stop="activeCategory = {_id: category._id, name: category.name}; editModal = true"
+                      @click.stop="activeCategory = {id: category.id, name: category.name}; editModal = true"
                     >edit</v-icon>
                   </v-btn>
                   <v-btn flat icon>
                     <v-icon
                       style="font-size: 17.5px;"
-                      @click.stop="activeCategory = {_id: category._id, name: category.name}; deleteModal = true"
+                      @click.stop="activeCategory = {id: category.id, name: category.name}; deleteModal = true"
                     >delete</v-icon>
                   </v-btn>
                 </div>
@@ -95,7 +95,7 @@ export default {
     methods: {
         deleteCategory() {
             this.$http({
-                url: `/api/category/${this.activeCategory._id}/delete`,
+                url: `/api/category/${this.activeCategory.id}/delete`,
                 corssDomain: true,
                 method: "GET",
             }).then(_ => {
@@ -107,13 +107,13 @@ export default {
                 };
                 this.$store.dispatch("toggleSnackBar", payload);
                 // find deleted comment index then splice off the post.comments array
-                let i = this.allCategories.findIndex(x => x._id == this.activeCategory._id);
+                let i = this.allCategories.findIndex(x => x.id == this.activeCategory.id);
                 this.allCategories.splice(i, 1);
             });
         },
         editCategory() {
             this.$http({
-                url: `/api/category/${this.activeCategory._id}/edit`,
+                url: `/api/category/${this.activeCategory.id}/edit`,
                 data: this.activeCategory,
                 crossDomain: true,
                 method: "POST",
@@ -126,7 +126,7 @@ export default {
                 };
                 this.$store.dispatch("toggleSnackBar", payload);
                 // find deleted comment index then splice off the post.comments array
-                let i = this.allCategories.findIndex(x => x._id == this.activeCategory._id);
+                let i = this.allCategories.findIndex(x => x.id == this.activeCategory.id);
                 this.allCategories[i].name = this.activeCategory.name;
             });
         },
