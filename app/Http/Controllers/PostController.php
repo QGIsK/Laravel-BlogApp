@@ -15,7 +15,7 @@ class PostController extends Controller
      */
     public function index()
     {
-        return PostResource::collection(Post::with('user')->paginate(25));
+        return PostResource::collection(Post::with('user')->get());
     }
 
     /**
@@ -26,8 +26,12 @@ class PostController extends Controller
      */
     public function store(Request $request)
     {
-        if ($request->user()->role == 1) {
-            return response()->json(['error' => 'You don\'t have permissions to do this.'], 403);
+        if (!$request->body || !$request->title) {
+            return response()->json(['error' => 'Please provide all fiels'], 422);
+        }
+
+        if (!$request->image) {
+            $request->image = 'https://images.unsplash.com/photo-1572546156422-d6fb14c8a8a0?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=1350&q=80';
         }
 
         $post = Post::create([
@@ -35,6 +39,7 @@ class PostController extends Controller
             'title' => $request->title,
             'body' => $request->body,
             'image' => $request->image,
+            'allowComments' => $request->allowComments
         ]);
 
         return new PostResource($post);
@@ -60,21 +65,20 @@ class PostController extends Controller
      */
     public function update(Request $request, Post $post)
     {
-        if ($request->user()->role == 1) {
-            return response()->json(['error' => 'You don\'t have permissions to do this.'], 403);
+        if (!$request->body || !$request->title) {
+            return response()->json(['error' => 'Please provide all fiels'], 422);
         }
 
-        $post->update($request->only(['title', 'description']));
+        if (!$request->image) {
+            $request->image = 'https://images.unsplash.com/photo-1572546156422-d6fb14c8a8a0?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=1350&q=80';
+        }
 
+        $post->update($request->only(['title', 'body', 'image', 'allowComments']));
         return new PostResource($post);
     }
 
     public function destroy(Request $request, Post $post)
     {
-        if ($request->user()->role == 1) {
-            return response()->json(['error' => 'You don\'t have permissions to do this.'], 403);
-        }
-
         $post->delete();
 
         return response()->json(null, 204);
