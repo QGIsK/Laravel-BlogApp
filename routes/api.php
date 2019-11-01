@@ -27,20 +27,18 @@ Route::prefix('auth')->group(function () {
     });
 });
 
-
 Route::group(['middleware' => 'auth:api'], function () {
-    // Users
     Route::get('users', 'UserController@index')->middleware('isAdmin');
-    Route::get('users/{id}', 'UserController@show')->middleware('isAdminOrSelf');
+    Route::get('users/{user}', 'UserController@show')->middleware('isAdminOrSelf');
 });
 
 Route::prefix('post')->group(function () {
     Route::get('/', 'PostController@index');
     Route::get('/{post}', 'PostController@show');
 
-    Route::group(['middleware' => 'auth:api'], function () {
+    Route::group(['middleware' => ['auth:api', 'isAdmin']], function () {
         Route::post('/', 'PostController@store');
-        Route::put('/{id}', 'PostController@update');
-        Route::delete('/{id}', 'PostController@destroy');
+        Route::put('/{post}', 'PostController@update');
+        Route::delete('/{post}', 'PostController@destroy');
     });
 });
