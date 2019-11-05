@@ -22,7 +22,6 @@ class PostResource extends JsonResource
             'updated_at' => (string) $this->updated_at,
             'user_id' => $this->user_id,
             'user' => $this->user,
-            'allowComments' => $this->allowComments,
             'image' => $this->image,
         ];
     }
