@@ -19,7 +19,6 @@ class CreatePostsTable extends Migration
             $table->unsignedInteger('user_id');
             $table->string("title");
             $table->longText("body");
-            $table->boolean("allowComments")->default(1);
             $table->string("image")->nullable();
         });
     }
