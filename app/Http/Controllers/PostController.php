@@ -39,7 +39,6 @@ class PostController extends Controller
             'title' => $request->title,
             'body' => $request->body,
             'image' => $request->image,
-            'allowComments' => $request->allowComments
         ]);
 
         return new PostResource($post);
@@ -73,7 +72,7 @@ class PostController extends Controller
             $request->image = 'https://images.unsplash.com/photo-1572546156422-d6fb14c8a8a0?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=1350&q=80';
         }
 
-        $post->update($request->only(['title', 'body', 'image', 'allowComments']));
+        $post->update($request->only(['title', 'body', 'image']));
         return new PostResource($post);
     }
 
