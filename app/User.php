@@ -16,6 +16,7 @@ class User extends Authenticatable implements JWTSubject
      *
      * @var array
      */
+
     protected $fillable = [
         'name', 'email', 'password',
     ];
@@ -25,6 +26,7 @@ class User extends Authenticatable implements JWTSubject
      *
      * @var array
      */
+
     protected $hidden = [
         'password', 'remember_token',
     ];
@@ -32,6 +34,11 @@ class User extends Authenticatable implements JWTSubject
     public function posts()
     {
         return $this->hasMany(Post::class);
+    }
+
+    public function comments()
+    {
+        return $this->hasMany(Comment::class);
     }
 
     public function getJWTIdentifier()
