@@ -42,3 +42,17 @@ Route::prefix('post')->group(function () {
         Route::delete('/{post}', 'PostController@destroy');
     });
 });
+
+Route::prefix('comment')->group(function () {
+    Route::get('/{post}', 'CommentController@index');
+    // Route::get('/{post}/{comment}', 'CommentController@show');
+
+    Route::group(['middleware' => 'auth:api'], function () {
+        Route::post('/{post}', 'CommentController@store');
+    });
+
+    Route::group(['middleware' => ['auth:api', 'isAdminOrSelf']], function () {
+        Route::put('/{comment}', 'CommentController@update');
+        Route::delete('/{comment}', 'CommentController@destroy');
+    });
+});
