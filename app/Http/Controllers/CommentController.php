@@ -17,7 +17,7 @@ class CommentController extends Controller
      */
     public function index($post)
     {
-        return CommentCollection(Comment::Where('post', $post)->get());
+        return new CommentCollection(Comment::Where('post', $post)->get());
     }
 
     /**
