@@ -37,7 +37,7 @@ export default new Vuex.Store({
 		auth_success(state, { token, user }) {
 			state.status = "success";
 			state.token = token;
-			state.user = user;
+			// state.user = user;
 		},
 		auth_error(state) {
 			state.status = "error";
@@ -78,7 +78,6 @@ export default new Vuex.Store({
 		getPosts({ commit }) {
 			axios({ url: "/api/post", crossDomain: true, method: "GET" })
 				.then(res => {
-					console.log(res.data.data)
 					commit("getPosts", { posts: res.data.data });
 					
 				})
@@ -139,13 +138,14 @@ export default new Vuex.Store({
 					method: "POST",
 				})
 					.then(resp => {
-						const token = resp.data.token;
-						const user = {
-							id: resp.data.user[0].id,
-							name: resp.data.user[0].name,
-							email: resp.data.user[0].email,
-							role: resp.data.user[0].role
-						};
+						console.log(resp.data)
+						const token = resp.data.access_token;
+						// const user = {
+						// 	id: resp.data.user[0].id,
+						// 	name: resp.data.user[0].name,
+						// 	email: resp.data.user[0].email,
+						// 	role: resp.data.user[0].role
+						// };
 
 						let payload = {
 							type: "success",
@@ -153,12 +153,12 @@ export default new Vuex.Store({
 						};
 
 						localStorage.setItem("token", token);
-						localStorage.setItem("user", JSON.stringify(user));
+						// localStorage.setItem("user", JSON.stringify(user));
 						axios.defaults.headers.common["Authorization"] = token;
 						commit("toggleSnackBar", payload);
 						commit("auth_success", {
 							token,
-							user,
+							// user,
 						});
 						resolve(resp);
 					})
@@ -180,26 +180,26 @@ export default new Vuex.Store({
 					method: "POST",
 				})
 					.then(resp => {
-						const token = resp.data.token;
-						const user = {
-							id: resp.data.user[0].id,
-							name: resp.data.user[0].name,
-							email: resp.data.user[0].email,
-							role: resp.data.user[0].role
-						};
+						const token = resp.data.access_token;
+						// const user = {
+						// 	id: resp.data.user[0].id,
+						// 	name: resp.data.user[0].name,
+						// 	email: resp.data.user[0].email,
+						// 	role: resp.data.user[0].role
+						// };
 
 						let payload = {
 							type: "success",
-							text: "Successfully registered",
+							text: "Successfully logged in",
 						};
 
 						localStorage.setItem("token", token);
-						localStorage.setItem("user", JSON.stringify(user));
-
+						// localStorage.setItem("user", JSON.stringify(user));
 						axios.defaults.headers.common["Authorization"] = token;
+						commit("toggleSnackBar", payload);
 						commit("auth_success", {
 							token,
-							user,
+							// user,
 						});
 						commit("toggleSnackBar", payload);
 						resolve(resp);

@@ -1,5 +1,5 @@
 <template>
-  <v-layout mt-5 mb-5 v-if="Object.keys(post).length">
+  <v-layout mt-5 mb-5 v-if="post">
     <v-flex xs12 sm10 offset-sm1>
       <v-card class="mb-5">
         <v-img class="white--text" height="500px" :src="post.image">
@@ -10,9 +10,6 @@
                 <br />
                 <span class="grey--text">{{post.lastEdited | formatDate}}</span>
                 <br />
-              </v-flex>
-              <v-flex xs-12 align-start flexbox>
-                <v-btn icon outlined color="blue-grey darken-3"></v-btn>
               </v-flex>
             </v-layout>
           </v-container>
@@ -58,7 +55,7 @@
             <br />
           </v-card-text>
         </v-card>
-        <v-card class="mt-4 mb-3" v-for="comment in post.comments" :key="comment.id">
+        <v-card class="mt-4 mb-3" v-for="comment in comments" :key="comment.id">
           <v-card-text>
             <div>
               {{comment.body}}
@@ -141,16 +138,13 @@ export default {
       deleteComment: null,
       editCommentModal: false,
       commentDeleteModal: false,
-      post: {},
+      comments: [],
       commentBody: this.commentBody,
       editComment: {
         id: null,
         body: ""
       }
     };
-  },
-  mounted() {
-    this.getPost(this.$route.params.id);
   },
   computed: {
     isOwner() {
@@ -165,19 +159,39 @@ export default {
     },
     isComment: {
       get() {
-        if (this.post.comments && this.post.comments.length > 0) return true;
+        if (this.comments && this.comments.length > 0) return true;
       },
       set() {
         return false;
       }
+    },
+    post: {
+      get() {
+        const post = this.$store.getters.posts.filter(post => {
+          return String(post.id) === this.$route.params.id;
+        });
+        if (post[0]) this.getComments(this.$route.params.id);
+        return post[0];
+      }
     }
   },
   methods: {
+    getComments(id) {
+      this.$http({
+        url: `/api/comment/${id}`,
+        method: "GET"
+      }).then(res => {
+        console.log(res.data.data[0]);
+        for (let i = 0; i < res.data.data.length; i++) {
+          this.comments.push(res.data.data[i]);
+        }
+      });
+    },
     deletePost() {
       this.$http({
-        url: `/api/post/${this.post.id}/delete`,
+        url: `/api/post/${this.post.id}`,
         crossdomain: true,
-        method: "GET"
+        method: "DELETE"
       })
         .then(res => {
           this.deleteModal = false;
@@ -199,18 +213,16 @@ export default {
     },
     postEditComment() {
       this.$http({
-        url: `/api/post/${this.post.id}/comment/${this.editComment.id}/edit`,
+        url: `/api/comment/${this.editComment.id}/`,
         data: this.editComment,
         crossDomain: true,
-        method: "POST"
+        method: "PUT"
       })
         .then(res => {
           this.editCommentModal = false;
           // Find in post comments array then edit and reset edit comment variables
-          let i = this.post.comments.findIndex(
-            x => x.id == this.editComment.id
-          );
-          this.post.comments[i].body = this.editComment.body;
+          let i = this.comments.findIndex(x => x.id == this.editComment.id);
+          this.comments[i].body = this.editComment.body;
           this.editComment = {
             id: null,
             body: ""
@@ -234,9 +246,9 @@ export default {
     DeleteComment() {
       // console.log(this.deleteComment)
       this.$http({
-        url: `/api/post/${this.post.id}/comment/${this.deleteComment}/delete`,
+        url: `/api/comment/${this.deleteComment}`,
         crossdomain: true,
-        method: "GET"
+        method: "DELETE"
       })
         .then(_ => {
           //  turn off delete modal
@@ -247,40 +259,40 @@ export default {
             text: "Successfully deleted comment"
           };
           this.$store.dispatch("toggleSnackBar", payload);
-          // find deleted comment index then splice off the post.comments array
-          let i = this.post.comments.findIndex(x => x.id == this.deleteComment);
-          this.post.comments.splice(i, 1);
+          // find deleted comment index then splice off the comments array
+          let i = this.comments.findIndex(x => x.id == this.deleteComment);
+          this.comments.splice(i, 1);
         })
         .catch(e => console.log(e));
     },
     isCommentOwner(id) {
       return id == this.$store.getters.userId;
     },
-    getPost(id) {
-      this.$http({
-        url: `/api/post/${id}`,
-        crossdomain: true,
-        method: "GET"
-      })
-        .then(res => {
-          this.post = {
-            title: res.data.data.title,
-            body: res.data.data.body,
-            lastEdited: res.data.data.lastEdited,
-            image: res.data.data.image,
-            user: res.data.data.user,
-            id: res.data.data.id
-          };
-        })
-        .catch(e => {
-          let payload = {
-            type: "error",
-            text: e.response.data.error
-          };
-          this.$store.dispatch("toggleSnackBar", payload);
-          this.$router.push("/");
-        });
-    },
+    // getPost(id) {
+    //   this.$http({
+    //     url: `/api/post/${id}`,
+    //     crossdomain: true,
+    //     method: "GET"
+    //   })
+    //     .then(res => {
+    //       this.post = {
+    //         title: res.data.data.title,
+    //         body: res.data.data.body,
+    //         lastEdited: res.data.data.lastEdited,
+    //         image: res.data.data.image,
+    //         user: res.data.data.user,
+    //         id: res.data.data.id
+    //       };
+    //     })
+    //     .catch(e => {
+    //       let payload = {
+    //         type: "error",
+    //         text: e.response.data.error
+    //       };
+    //       this.$store.dispatch("toggleSnackBar", payload);
+    //       this.$router.push("/");
+    //     });
+    // },
     userRedirect(id) {
       this.$router.push(`/user/${id}`);
     },
@@ -300,7 +312,7 @@ export default {
       })
         .then(res => {
           this.commentBody = "";
-          this.post.comments.push(res.data.returnComment);
+          this.comments.push(res.data.returnComment);
           // define payload then trigger snackbar to show user it was successfull
           let payload = {
             type: "success",
