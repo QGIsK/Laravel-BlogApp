@@ -94,16 +94,6 @@
 
         <!-- CONFIGURE -->
         <v-stepper-content step="4">
-          <v-subheader class="title">Type of post</v-subheader>
-          <v-divider></v-divider>
-          <v-list-tile>
-            <v-switch
-              v-model="allowComments"
-              color="primary darken-3"
-              label="Allow Comments. Default: False"
-            ></v-switch>
-          </v-list-tile>
-
           <v-subheader style="margin-top: 25px;" class="title">Categories</v-subheader>
           <v-divider></v-divider>
           <v-list-tile v-for="category in allCategories" :key="category.id">
@@ -140,10 +130,6 @@
               <div>
                 <span v-html="body"></span>
                 <br />
-                <span class="grey--text">
-                  Allow Comments
-                  <b>{{allowComments}}</b>
-                </span>
               </div>
             </v-card-text>
           </v-card>
@@ -163,152 +149,151 @@ import "vue2-dropzone/dist/vue2Dropzone.min.css";
 
 import "vue-wysiwyg/dist/vueWysiwyg.css";
 export default {
-    name: "editPost",
-    components: {
-        vueDropzone: vue2Dropzone,
+  name: "editPost",
+  components: {
+    vueDropzone: vue2Dropzone
+  },
+  props: ["post"],
+  data() {
+    return {
+      title: this.post.title,
+      body: this.post.body,
+      imageUrl: this.post.image,
+      e1: 0,
+      errors: [],
+      dropzoneOptions: {
+        url: "http://localhost:3000/api/file/upload",
+        thumbnailWidth: 150,
+        maxFilesize: 5.0,
+        maxFiles: 1,
+        headers: { Authorization: localStorage.getItem("token") }
+      }
+      // newCategories: this.post.categories.map(a => a.id),
+    };
+  },
+  mounted() {},
+  computed: {
+    newCategories: {
+      get() {
+        return this.post.categories.map(a => a.id);
+      },
+      set(val) {
+        return val;
+      }
     },
-    props: ["post"],
-    data() {
-        return {
-            title: this.post.title,
-            body: this.post.body,
-            imageUrl: this.post.image,
-            allowComments: this.post.allowComments,
-            e1: 0,
-            errors: [],
-            dropzoneOptions: {
-                url: "http://localhost:3000/api/file/upload",
-                thumbnailWidth: 150,
-                maxFilesize: 5.0,
-                maxFiles: 1,
-                headers: { Authorization: localStorage.getItem("token") },
-            },
-            // newCategories: this.post.categories.map(a => a.id),
-        };
+    categories: {
+      get() {
+        return this.post.categories;
+      },
+      set(val) {
+        return val;
+      }
     },
-    mounted() {},
-    computed: {
-        newCategories: {
-            get() {
-                return this.post.categories.map(a => a.id);
-            },
-            set(val) {
-                return val;
-            },
-        },
-        categories: {
-            get() {
-                return this.post.categories;
-            },
-            set(val) {
-                return val;
-            },
-        },
-        allCategories: {
-            get() {
-                return this.$store.getters.categories;
-            },
-        },
-        posts: {
-            get() {
-                return this.$store.getters.posts;
-            },
-        },
-        show: {
-            get() {
-                return this.$store.getters.editPostModalActive;
-            },
-            set() {
-                this.$store.dispatch("toggleEditPostModal");
-            },
-        },
+    allCategories: {
+      get() {
+        return this.$store.getters.categories;
+      }
     },
-    methods: {
-        fileSuccess(file, response) {
-            let payload = {
-                type: "success",
-                text: "Successfully uploaded.",
-            };
-
-            this.$store.dispatch("toggleSnackBar", payload);
-
-            // console.log(file, response.path);
-            this.imageUrl = response.path;
-        },
-        fileError(file, message, xhr) {
-            let payload = {
-                type: "error",
-                text: "An error occured while uploading",
-            };
-
-            this.$store.dispatch("toggleSnackBar", payload);
-        },
-        toggleAddCategoryModal() {
-            this.$store.commit("toggleAddCategoryModal");
-        },
-        togglePreviewModal() {
-            this.$store.dispatch("togglePreviewModal", {
-                post: {
-                    title: this.post.title,
-                    body: this.post.body,
-                },
-            });
-        },
-        edit() {
-            // console.log(this.newCategories)
-            const data = {
-                title: this.title,
-                body: this.body,
-                categories: this.post.categories,
-                imageUrl: this.imageUrl,
-                allowComments: this.allowComments,
-            };
-            this.$http({
-                url: `/api/post/${this.post.id}/edit`,
-                crossdomain: true,
-                data,
-                method: "POST",
-            })
-                .then(res => {
-                    this.$store.dispatch("toggleEditPostModal");
-                    this.post.title = data.title;
-                    this.post.body = data.body;
-                    this.post.allowComments = data.allowComments;
-                    this.post.categories = [];
-                    for (let i = 0; i < this.newCategories.length; i++) {
-                        let index = this.allCategories.findIndex(x => x.id == this.newCategories[i]);
-                        if (this.allCategories[index].id === this.newCategories[i]) {
-                            this.post.categories.push(this.allCategories[index]);
-                        }
-                    }
-                    // define payload then trigger snackbar to show user it was successfull
-                    let payload = {
-                        type: "success",
-                        text: "Successfully edited your post",
-                    };
-                    this.$store.dispatch("toggleSnackBar", payload);
-
-                    // Update global posts array
-                    let i = this.posts.findIndex(x => x.id == res.data.post.id);
-                    this.posts[i] = res.data.post;
-                })
-                .catch(e => {
-                    // define payload then trigger snackbar to show user it was successfull
-                    let payload = {
-                        type: "error",
-                        text: "An error occured, please try again later.",
-                    };
-                    this.$store.dispatch("toggleSnackBar", payload);
-                });
-        },
+    posts: {
+      get() {
+        return this.$store.getters.posts;
+      }
     },
+    show: {
+      get() {
+        return this.$store.getters.editPostModalActive;
+      },
+      set() {
+        this.$store.dispatch("toggleEditPostModal");
+      }
+    }
+  },
+  methods: {
+    fileSuccess(file, response) {
+      let payload = {
+        type: "success",
+        text: "Successfully uploaded."
+      };
+
+      this.$store.dispatch("toggleSnackBar", payload);
+
+      // console.log(file, response.path);
+      this.imageUrl = response.path;
+    },
+    fileError(file, message, xhr) {
+      let payload = {
+        type: "error",
+        text: "An error occured while uploading"
+      };
+
+      this.$store.dispatch("toggleSnackBar", payload);
+    },
+    toggleAddCategoryModal() {
+      this.$store.commit("toggleAddCategoryModal");
+    },
+    togglePreviewModal() {
+      this.$store.dispatch("togglePreviewModal", {
+        post: {
+          title: this.post.title,
+          body: this.post.body
+        }
+      });
+    },
+    edit() {
+      // console.log(this.newCategories)
+      const data = {
+        title: this.title,
+        body: this.body,
+        categories: this.post.categories,
+        imageUrl: this.imageUrl
+      };
+      this.$http({
+        url: `/api/post/${this.post.id}/edit`,
+        crossdomain: true,
+        data,
+        method: "POST"
+      })
+        .then(res => {
+          this.$store.dispatch("toggleEditPostModal");
+          this.post.title = data.title;
+          this.post.body = data.body;
+          this.post.categories = [];
+          for (let i = 0; i < this.newCategories.length; i++) {
+            let index = this.allCategories.findIndex(
+              x => x.id == this.newCategories[i]
+            );
+            if (this.allCategories[index].id === this.newCategories[i]) {
+              this.post.categories.push(this.allCategories[index]);
+            }
+          }
+          // define payload then trigger snackbar to show user it was successfull
+          let payload = {
+            type: "success",
+            text: "Successfully edited your post"
+          };
+          this.$store.dispatch("toggleSnackBar", payload);
+
+          // Update global posts array
+          let i = this.posts.findIndex(x => x.id == res.data.post.id);
+          this.posts[i] = res.data.post;
+        })
+        .catch(e => {
+          // define payload then trigger snackbar to show user it was successfull
+          let payload = {
+            type: "error",
+            text: "An error occured, please try again later."
+          };
+          this.$store.dispatch("toggleSnackBar", payload);
+        });
+    }
+  }
 };
 </script>
 
 <style scoped>
 #dropzone {
-    background-color: #111820;
-    color: #fff;
-    border: none;
+  background-color: #111820;
+  color: #fff;
+  border: none;
 }
 </style>

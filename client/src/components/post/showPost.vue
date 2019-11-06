@@ -44,15 +44,7 @@
           </v-btn>
         </v-card-actions>
       </v-card>
-      <span v-if="!post.allowComments">
-        <v-card class="mt-4 mb-5" v-if="!isComment">
-          <v-card-text>
-            Comments are disabled
-            <br />
-          </v-card-text>
-        </v-card>
-      </span>
-      <span v-else>
+      <span>
         <span class="title" mb-5>Comments</span>
         <v-card v-if="isLoggedIn" mt-5 mb-5>
           <v-card-text>
@@ -271,17 +263,13 @@ export default {
         method: "GET"
       })
         .then(res => {
-          // this.post = res.data.data;
           this.post = {
             title: res.data.data.title,
             body: res.data.data.body,
             lastEdited: res.data.data.lastEdited,
             image: res.data.data.image,
             user: res.data.data.user,
-            // categories: res.data.data.categories,
             id: res.data.data.id
-            // comments: res.data.comments,
-            // allowComments: res.data.data.allowComments
           };
         })
         .catch(e => {
