@@ -46,7 +46,12 @@
         <v-stepper-content step="2">
           <v-flex xs12>
             <v-text-field label="Password" v-model="password" type="password" required></v-text-field>
-            <v-text-field label="Confirm Password" v-model="password2" type="password" required></v-text-field>
+            <v-text-field
+              label="Confirm Password"
+              v-model="password_confirmation"
+              type="password"
+              required
+            ></v-text-field>
           </v-flex>
           <v-layout align-center justify-end row fill-height>
             <v-btn color="primary" @click="e1++">Continue</v-btn>
@@ -72,63 +77,63 @@
 
 <script>
 export default {
-    name: "registerModal",
-    data() {
-        return {
-            e1: 0,
-            alert: false,
-            errors: [],
-            name: this.name,
-            email: this.email,
-            password: this.password,
-            password2: this.password2,
-        };
+  name: "registerModal",
+  data() {
+    return {
+      e1: 0,
+      alert: false,
+      errors: [],
+      name: this.name,
+      email: this.email,
+      password: this.password,
+      password_confirmation: this.password_confirmation
+    };
+  },
+  computed: {
+    show: {
+      get() {
+        return this.$store.getters.registerActive;
+      },
+      set() {
+        this.$store.dispatch("toggleRegisterModal");
+      }
+    }
+  },
+  methods: {
+    register() {
+      let name = this.name;
+      let email = this.email;
+      let password = this.password;
+      let password_confirmation = this.password_confirmation;
+      this.$store
+        .dispatch("register", {
+          name,
+          email,
+          password,
+          password_confirmation
+        })
+        .then(() => {
+          this.$store.commit("toggleRegisterModal");
+          this.$router.push("/");
+        })
+        .catch(err => {
+          this.alert = true;
+          this.errors = err.response.data.errors;
+        });
     },
-    computed: {
-        show: {
-            get() {
-                return this.$store.getters.registerActive;
-            },
-            set() {
-                this.$store.dispatch("toggleRegisterModal");
-            },
-        },
-    },
-    methods: {
-        register() {
-            let name = this.name;
-            let email = this.email;
-            let password = this.password;
-            let password2 = this.password2;
-            this.$store
-                .dispatch("register", {
-                    name,
-                    email,
-                    password,
-                    password2,
-                })
-                .then(() => {
-                    this.$store.commit("toggleRegisterModal");
-                    this.$router.push("/");
-                })
-                .catch(err => {
-                    this.alert = true;
-                    this.errors = err.response.data.errors;
-                });
-        },
-        openLogin() {
-            this.$store.commit("toggleRegisterModal");
-            this.$store.commit("toggleLoginModal");
-        },
-    },
+    openLogin() {
+      this.$store.commit("toggleRegisterModal");
+      this.$store.commit("toggleLoginModal");
+    }
+  }
 };
 </script>
 
 <style scoped>
 #dropzone {
-    background-color: #111820;
-    color: #fff;
-    border: none;
-    height: 200px;
+  background-color: #111820;
+  color: #fff;
+  border: none;
+  height: 200px;
 }
 </style>

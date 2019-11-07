@@ -66,7 +66,7 @@
         <v-stepper-content step="2">
           <v-card class="mb-5">
             <v-flex xs12>
-              <wysiwyg id="body" v-model="body" />
+              <wysiwyg id="body" v-model="body"/>
             </v-flex>
           </v-card>
 
@@ -118,9 +118,9 @@
                 <v-layout fill-height>
                   <v-flex xs12 align-end flexbox>
                     <span class="headline">{{title}}</span>
-                    <br />
+                    <br>
                     <span class="grey--text">{{new Date | formatDate}}</span>
-                    <br />
+                    <br>
                   </v-flex>
                 </v-layout>
               </v-container>
@@ -227,12 +227,12 @@ export default {
     async newPost() {
       const data = {
         title: this.title,
-        body: this.body,
-        categories: this.categories,
-        imageUrl: this.imagePath
+        body: this.body
+        // categories: this.categories,
+        // imageUrl: this.imagePath
       };
       await this.$http({
-        url: "/api/post/new",
+        url: "/api/post/",
         crossdomain: true,
         data,
         method: "POST"
@@ -252,7 +252,7 @@ export default {
             text: "Successfully posted."
           };
 
-          this.posts.unshift(res.data.post);
+          this.posts.unshift(res.data.data);
           this.$store.dispatch("toggleSnackBar", payload);
         })
         .catch(err => {
