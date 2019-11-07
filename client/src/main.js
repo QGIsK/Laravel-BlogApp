@@ -37,10 +37,13 @@ if (!process.env.NODE_ENV || process.env.NODE_ENV == "development") {
 
 const token = localStorage.getItem("token");
 
+Vue.prototype.$http.defaults.headers.common["Content-Type"] =
+    "application/json";
+
 if (token) {
-    Vue.prototype.$http.defaults.headers.common["Content-Type"] =
-        "application/json";
-    Vue.prototype.$http.defaults.headers.common["Authorization"] = token;
+    Vue.prototype.$http.defaults.headers.common[
+        "Authorization"
+    ] = `Bearer ${token}`;
 }
 
 new Vue({
