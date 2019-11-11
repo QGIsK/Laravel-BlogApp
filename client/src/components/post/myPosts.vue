@@ -1,6 +1,6 @@
 <template>
   <v-layout justify-center>
-    <editPost :post="post" />
+    <editPost :post="post"/>
     <v-dialog v-model="deleteModal" dark max-width="450px">
       <v-card>
         <v-card-title
@@ -9,7 +9,7 @@
         <v-card-text class="text-xs-center">
           <v-btn @click="deletePost(delPost)" color="red">yes</v-btn>
           <v-btn @click="deleteModal = false">no</v-btn>
-          <br />
+          <br>
         </v-card-text>
       </v-card>
     </v-dialog>
@@ -29,9 +29,9 @@
                   <v-layout fill-height>
                     <v-flex xs12 align-end flexbox>
                       <span class="headline white--text" v-text="post.title"></span>
-                      <br />
+                      <br>
                       <span class="grey--text">{{post.createdAt | formatDate}}</span>
-                      <br />
+                      <br>
                       <span
                         class="grey--text"
                         v-for="category in post.categories"
@@ -75,7 +75,6 @@ export default {
   },
   data: () => ({
     deleteModal: false,
-    // Posts: [],
     post: {},
     delPost: {}
   }),
@@ -140,15 +139,15 @@ export default {
     toggleModal(type) {
       this.$store.dispatch(type);
     },
-    getUsersPost() {
-      this.$http({
-        url: "/api/post/my",
-        crossdomain: true,
-        method: "GET"
-      }).then(res => {
-        this.Posts = res.data.posts;
-      });
-    },
+    // getUsersPost() {
+    //   this.$http({
+    //     url: "/api/post/my",
+    //     crossdomain: true,
+    //     method: "GET"
+    //   }).then(res => {
+    //     this.Posts = res.data.posts;
+    //   });
+    // },
     postRedirect(id) {
       this.$router.push(`/post/${id}`);
     }
