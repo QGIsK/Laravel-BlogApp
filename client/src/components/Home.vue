@@ -1,6 +1,6 @@
 <template>
   <v-app>
-    <sideNav :Posts="Posts" />
+    <sideNav :Posts="Posts"/>
     <v-layout justify-center>
       <v-flex xs16 sm10>
         <v-container fluid grid-list-md>
@@ -18,21 +18,16 @@
                     <v-layout fill-height>
                       <v-flex xs12 align-end flexbox>
                         <span class="headline">{{post.title}}</span>
-                        <br />
+                        <br>
                         <span
                           style="cursor: pointer"
                           v-if="post.user"
                           @click="userRedirect(post.user.id)"
                         >By {{post.user.name}}</span>
-                        <br />
+                        <br>
                         <span class="grey--text">{{post.lastEdited | formatDate}}</span>
-                        <br />
+                        <br>
                       </v-flex>
-                      <!-- <v-flex xs-12 align-start flexbox>
-                        <v-btn icon>
-                          <v-icon @click="toggleShareModal(post.id)">share</v-icon>
-                        </v-btn>
-                      </v-flex>-->
                     </v-layout>
                   </v-container>
                 </v-img>
@@ -44,14 +39,10 @@
                       v-for="category in post.categories"
                       :key="category.id"
                     >{{category.name}}&nbsp;</span>
-                    <br />
+                    <br>
                     <span v-html="post.body.slice(0, 250)"></span>
-                    <span
-                      @click="postRedirect(post.id)"
-                      style="cursor: pointer"
-                      class="grey--text"
-                    >
-                      <br />Read more...
+                    <span @click="postRedirect(post.id)" style="cursor: pointer" class="grey--text">
+                      <br>Read more...
                     </span>
                   </div>
                 </v-card-text>
@@ -74,11 +65,7 @@ export default {
   },
   data: () => ({
     show: false
-    // Posts: [],
   }),
-  mounted() {
-    // this.getAllPosts();
-  },
   computed: {
     Posts: {
       get() {
@@ -87,15 +74,6 @@ export default {
     }
   },
   methods: {
-    getAllPosts() {
-      this.$http({
-        url: "/api/post/?amount=16",
-        crossdomain: true,
-        method: "GET"
-      }).then(res => {
-        this.Posts.push(res.data.posts);
-      });
-    },
     postRedirect(id) {
       this.$router.push(`/post/${id}`);
     },
