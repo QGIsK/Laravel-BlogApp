@@ -5,8 +5,6 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use App\Comment;
 use App\Http\Resources\CommentResource;
-use App\Http\Resources\CommentCollection;
-
 
 class CommentController extends Controller
 {
@@ -17,7 +15,7 @@ class CommentController extends Controller
      */
     public function index($post)
     {
-        return new CommentCollection(Comment::Where('post', $post)->get());
+        return CommentResource::collection(Comment::where('post', $post)->get());
     }
 
     /**
@@ -61,7 +59,6 @@ class CommentController extends Controller
      */
     public function update(Request $request, Comment $comment)
     {
-
         if (!$request->body) {
             return response()->json(['error' => 'Please provide all fiels'], 422);
         }
