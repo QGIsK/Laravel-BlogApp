@@ -16,7 +16,7 @@
             <v-btn dark flat v-on="on">Post</v-btn>
           </template>
           <v-list>
-            <v-list-tile v-if="isAdmin">
+            <v-list-tile>
               <v-list-tile-title
                 style="cursor:pointer"
                 @click.stop="changeModal('toggleAddCategoryModal')"
@@ -82,74 +82,71 @@ import addCategoryModal from "./components/modals/addCategory.vue";
 import snackbar from "./components/snackbars/snackbar.vue";
 
 export default {
-    name: "App",
-    components: {
-        loginModal,
-        registerModal,
-        newPost,
-        addCategoryModal,
-        mySettingsModal,
-        snackbar,
+  name: "App",
+  components: {
+    loginModal,
+    registerModal,
+    newPost,
+    addCategoryModal,
+    mySettingsModal,
+    snackbar
+  },
+  data() {
+    const that = this;
+    return {
+      nameRegister: "",
+      emailRegister: "",
+      passwordRegister: "",
+      password2Register: "",
+      isDark: true
+    };
+  },
+  computed: {
+    isLoggedIn() {
+      return this.$store.getters.isLoggedIn;
     },
-    data() {
-        const that = this;
-        return {
-            nameRegister: "",
-            emailRegister: "",
-            passwordRegister: "",
-            password2Register: "",
-            isDark: true,
-        };
+    user() {
+      return JSON.parse(localStorage.getItem("user"));
     },
-    computed: {
-        isLoggedIn() {
-            return this.$store.getters.isLoggedIn;
-        },
-        user() {
-            return JSON.parse(localStorage.getItem("user"));
-        },
-        isEditor() {
-            return this.$store.getters.isEditor;
-        },
-        isAdmin() {
-            return this.$store.getters.isAdmin;
-        },
-        categories: {
-            get() {
-                return this.$store.getters.categories;
-            },
-        },
-        posts: {
-            get() {
-                return this.$store.getters.posts;
-            },
-        },
+    isEditor() {
+      return this.$store.getters.isEditor;
     },
-    mounted() {
-        this.$store.dispatch("getPosts");
-        this.$store.dispatch("getCategories");
+    categories: {
+      get() {
+        return this.$store.getters.categories;
+      }
     },
-    methods: {
-        redirect(route) {
-            this.$router.push(route);
-        },
-        logout() {
-            this.$store.dispatch("logout").then(() => {
-                this.$router.push("/");
-            });
-        },
-        postRedirect(id) {
-            this.$router.push(`/post/${id}`);
-        },
-        userRedirect(id) {
-            this.$router.push(`/user/${id}`);
-        },
-        changeModal(type) {
-            this.$store.dispatch(type);
-        },
-        userProfile() {
-            this.$router.push(`/user/${this.$store.getters.userId}`);
-        },
+    posts: {
+      get() {
+        return this.$store.getters.posts;
+      }
+    }
+  },
+  mounted() {
+    this.$store.dispatch("getPosts");
+    this.$store.dispatch("getCategories");
+  },
+  methods: {
+    redirect(route) {
+      this.$router.push(route);
     },
+    logout() {
+      this.$store.dispatch("logout").then(() => {
+        this.$router.push("/");
+      });
+    },
+    postRedirect(id) {
+      this.$router.push(`/post/${id}`);
+    },
+    userRedirect(id) {
+      this.$router.push(`/user/${id}`);
+    },
+    changeModal(type) {
+      this.$store.dispatch(type);
+    },
+    userProfile() {
+      this.$router.push(`/user/${this.$store.getters.userId}`);
+    }
+  }
 };
 </script>
