@@ -231,10 +231,6 @@ export default new Vuex.Store({
         snackbarActive: state => state.snackbarActive,
         snackbarText: state => state.snackbarText,
         snackbarType: state => state.snackbarType,
-        isAdmin: state => {
-            if (state.user.role >= 3) return true;
-            else return false;
-        },
         isEditor: state => {
             if (state.user.role >= 2) return true;
             else return false;
