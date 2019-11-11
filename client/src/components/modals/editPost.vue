@@ -66,7 +66,7 @@
         <v-stepper-content step="2">
           <v-card class="mb-5">
             <v-flex xs12>
-              <wysiwyg id="body" v-model="body" />
+              <wysiwyg id="body" v-model="body"/>
             </v-flex>
           </v-card>
 
@@ -97,13 +97,9 @@
           <v-subheader style="margin-top: 25px;" class="title">Categories</v-subheader>
           <v-divider></v-divider>
           <v-list-tile v-for="category in allCategories" :key="category.id">
-            <v-switch
-              color="primary darken-3"
-              v-model="newCategories"
-              :label="category.name"
-              :value="category.id"
-            ></v-switch>
+            <v-switch disabled color="primary darken-3" :label="category.tag" :value="category.id"></v-switch>
           </v-list-tile>
+          <!-- v-model="newCategories" -->
           <v-btn flat @click="toggleAddCategoryModal">Update categories</v-btn>
 
           <v-layout align-center justify-end row fill-height>
@@ -119,9 +115,9 @@
                 <v-layout fill-height>
                   <v-flex xs12 align-end flexbox>
                     <span class="headline">{{title}}</span>
-                    <br />
+                    <br>
                     <span class="grey--text">{{new Date | formatDate}}</span>
-                    <br />
+                    <br>
                   </v-flex>
                 </v-layout>
               </v-container>
@@ -129,7 +125,7 @@
             <v-card-text class="layout justify-center">
               <div>
                 <span v-html="body"></span>
-                <br />
+                <br>
               </div>
             </v-card-text>
           </v-card>
@@ -173,22 +169,22 @@ export default {
   },
   mounted() {},
   computed: {
-    newCategories: {
-      get() {
-        return this.post.categories.map(a => a.id);
-      },
-      set(val) {
-        return val;
-      }
-    },
-    categories: {
-      get() {
-        return this.post.categories;
-      },
-      set(val) {
-        return val;
-      }
-    },
+    // newCategories: {
+    //   get() {
+    //     return this.post.categories.map(a => a.id);
+    //   },
+    //   set(val) {
+    //     return val;
+    //   }
+    // },
+    // categories: {
+    //   get() {
+    //     return this.post.categories;
+    //   },
+    //   set(val) {
+    //     return val;
+    //   }
+    // },
     allCategories: {
       get() {
         return this.$store.getters.categories;
@@ -244,28 +240,28 @@ export default {
       const data = {
         title: this.title,
         body: this.body,
-        categories: this.post.categories,
+        // categories: this.post.categories,
         imageUrl: this.imageUrl
       };
       this.$http({
-        url: `/api/post/${this.post.id}/edit`,
+        url: `/api/post/${this.post.id}/`,
         crossdomain: true,
         data,
-        method: "POST"
+        method: "PUT"
       })
         .then(res => {
           this.$store.dispatch("toggleEditPostModal");
           this.post.title = data.title;
           this.post.body = data.body;
-          this.post.categories = [];
-          for (let i = 0; i < this.newCategories.length; i++) {
-            let index = this.allCategories.findIndex(
-              x => x.id == this.newCategories[i]
-            );
-            if (this.allCategories[index].id === this.newCategories[i]) {
-              this.post.categories.push(this.allCategories[index]);
-            }
-          }
+          // this.post.categories = [];
+          // for (let i = 0; i < this.newCategories.length; i++) {
+          //   let index = this.allCategories.findIndex(
+          //     x => x.id == this.newCategories[i]
+          //   );
+          //   if (this.allCategories[index].id === this.newCategories[i]) {
+          //     this.post.categories.push(this.allCategories[index]);
+          //   }
+          // }
           // define payload then trigger snackbar to show user it was successfull
           let payload = {
             type: "success",

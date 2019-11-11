@@ -4,9 +4,14 @@ namespace App;
 
 use Illuminate\Database\Eloquent\Model;
 
-class Categories extends Model
+class Category extends Model
 {
     protected $fillable = [
         'tag',
     ];
+
+    public function post()
+    {
+        return $this->hasMany(Post::class);
+    }
 }

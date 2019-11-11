@@ -74,7 +74,7 @@ export default {
   methods: {
     getUser(id) {
       this.$http({
-        url: `/api/user/${id}`,
+        url: `/api/users/${id}`,
         crossdomain: true,
         method: "GET"
       }).then(res => {

@@ -94,7 +94,7 @@ export default new Vuex.Store({
                 crossdomain: true,
                 method: "GET"
             }).then(res => {
-                commit("getCategories", { categories: res.data.categories });
+                commit("getCategories", { categories: res.data.data });
             });
         },
         toggleLoginModal({ commit }) {

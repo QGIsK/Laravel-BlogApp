@@ -44,11 +44,11 @@
             <v-text-field label="Email" v-model="user.email" disabled></v-text-field>
             <!-- <v-text-field label="About" v-model="user.about" required></v-text-field> -->
 
-            <v-subheader class="title">Social Media</v-subheader>
+            <!-- <v-subheader class="title">Social Media</v-subheader>
             <v-divider class="mb-2"></v-divider>
             <span v-for="media in user.socials" :key="media.name">
               <v-text-field :label="media.name" v-model="media.href"></v-text-field>
-            </span>
+            </span>-->
           </v-flex>
           <v-layout align-center justify-end row fill-height>
             <v-btn color="primary" @click="e1++">Continue</v-btn>
@@ -88,7 +88,7 @@
             <v-switch
               color="primary darken-3"
               v-model="user.digest_categories"
-              :label="category.name"
+              :label="category.tag"
               :value="category.id"
             ></v-switch>
           </v-list-tile>
@@ -118,7 +118,7 @@
                 <span>{{user.about}}</span>
                 <span class="grey--text">
                   <br>
-                  Joined: {{user.join_date | formatDate}}
+                  Joined: {{user.created_at | formatDate}}
                 </span>
               </div>
             </v-card-text>
@@ -176,8 +176,8 @@ export default {
   methods: {
     edit() {
       this.$http({
-        url: "/api/user/my/edit",
-        method: "POST",
+        url: "/api/user/my/",
+        method: "put",
         data: { user: this.user }
       })
         .then(res => {

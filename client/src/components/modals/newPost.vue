@@ -100,7 +100,7 @@
             <v-switch
               color="primary darken-3"
               v-model="categories"
-              :label="category.name"
+              :label="category.tag"
               :value="category.id"
             ></v-switch>
           </v-list-tile>

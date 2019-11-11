@@ -28,8 +28,8 @@ Route::prefix('auth')->group(function () {
 });
 
 Route::group(['middleware' => 'auth:api'], function () {
-    Route::get('users', 'UserController@index')->middleware('isAdmin');
-    Route::get('users/{user}', 'UserController@show')->middleware('isAdminOrSelf');
+    Route::get('users/my', 'UserController@index');
+    Route::get('users/{user}', 'UserController@show');
 });
 
 Route::prefix('post')->group(function () {
@@ -54,5 +54,14 @@ Route::prefix('comment')->group(function () {
     Route::group(['middleware' => ['auth:api', 'isAdminOrSelf']], function () {
         Route::put('/{comment}', 'CommentController@update');
         Route::delete('/{comment}', 'CommentController@destroy');
+    });
+});
+
+Route::prefix("category")->group(function () {
+    Route::get('/', 'CategoryController@index');
+    Route::group(['middleware' => ['auth:api', 'isAdmin']], function () {
+        Route::post('/', 'CategoryController@store');
+        Route::put('/{tag}', 'CategoryController@update');
+        Route::delete('/{tag}', 'CategoryController@destroy');
     });
 });

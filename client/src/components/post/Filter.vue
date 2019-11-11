@@ -14,7 +14,7 @@
             <v-switch
               color="indigo darken-3"
               v-model="activeFilters"
-              :label="category.name"
+              :label="category.tag"
               :value="category.id"
             ></v-switch>
           </v-list-tile>
@@ -37,33 +37,33 @@
                   <v-layout fill-height>
                     <v-flex xs12 align-end flexbox>
                       <span class="headline white--text" v-text="post.title"></span>
-                      <br />
+                      <br>
                       <span class="grey--text">{{post.createdAt | formatDate}}</span>
-                      <br />
+                      <br>
                       <span
                         class="grey--text"
                         v-for="category in post.categories"
                         :key="category.id"
-                      >{{category.name}}&nbsp;</span>
+                      >{{category.tag}}&nbsp;</span>
                     </v-flex>
                   </v-layout>
                 </v-container>
               </v-img>
-              <v-card-actions>
+              <!-- <v-card-actions>
                 <v-spacer></v-spacer>
                 <v-btn icon>
-                  <!-- <v-icon>favorite</v-icon> -->
+                  <v-icon>favorite</v-icon>
                 </v-btn>
                 <v-btn icon>
-                  <!-- <v-icon>bookmark</v-icon> -->
+                  <v-icon>bookmark</v-icon>
                 </v-btn>
                 <v-btn icon>
-                  <!-- <v-icon>bookmark</v-icon> -->
+                  <v-icon>bookmark</v-icon>
                 </v-btn>
                 <v-btn icon>
-                  <!-- <v-icon>bookmark</v-icon> -->
+                  <v-icon>bookmark</v-icon>
                 </v-btn>
-              </v-card-actions>
+              </v-card-actions>-->
             </v-card>
           </v-flex>
         </v-layout>

@@ -2,18 +2,25 @@
 
 namespace App\Http\Controllers;
 
-use App\User;
 use Illuminate\Http\Request;
+use App\User;
+use App\Post;
+use App\Http\Resources\UserResource;
+use App\Http\Resources\PostResource;
 
 class UserController extends Controller
 {
-    public function index()
+    public function index(Request $request)
     {
-        $users = User::all();
+        $user = User::find($request->user()->id);
+        $posts = Post::where('user', $request->user()->id)->get();
+        
+
+        
         return response()->json(
             [
-                'status' => 'success',
-                'users' => $users->toArray()
+                'user' => $user->toArray(),
+                'posts' => $posts->toArray()
             ],
             200
         );
@@ -21,10 +28,12 @@ class UserController extends Controller
     public function show(Request $request, $id)
     {
         $user = User::find($id);
+        $posts = Post::where('user_id', $id);
+        
         return response()->json(
             [
-                'status' => 'success',
-                'user' => $user->toArray()
+                'user' => $user->toArray(),
+                'posts' => $posts
             ],
             200
         );

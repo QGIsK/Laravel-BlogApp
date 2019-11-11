@@ -128,7 +128,6 @@
 import editPost from "../modals/editPost";
 export default {
   name: "ShowPost",
-  props: ["Posts"],
   components: {
     editPost
   },
@@ -166,6 +165,11 @@ export default {
         return false;
       }
     },
+    Posts: {
+      get() {
+        return this.$store.getters.posts;
+      }
+    },
     post: {
       get() {
         const post = this.$store.getters.posts.filter(post => {
@@ -182,7 +186,6 @@ export default {
         url: `/api/comment/${id}`,
         method: "GET"
       }).then(res => {
-        console.log(res.data.data[0]);
         for (let i = 0; i < res.data.data.length; i++) {
           this.comments.push(res.data.data[i]);
         }
@@ -197,6 +200,10 @@ export default {
         .then(res => {
           this.deleteModal = false;
           this.$router.push("/");
+
+          let i = this.Posts.findIndex(x => x.id == this.post.id);
+          this.Posts.splice(i, 1);
+
           // define payload then trigger snackbar to show user it was successfull
           let payload = {
             type: "success",

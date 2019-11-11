@@ -15,7 +15,8 @@ class CommentController extends Controller
      */
     public function index($post)
     {
-        return CommentResource::collection(Comment::where('post', $post)->get());
+        return CommentResource::collection(Comment::with('user')->where('post', $post)->get());
+        // Resource::collection(Post::with('user')->get());
     }
 
     /**
