@@ -7,9 +7,9 @@
             <v-layout fill-height>
               <v-flex xs12 align-end flexbox>
                 <span class="headline">{{post.title}}</span>
-                <br />
+                <br>
                 <span class="grey--text">{{post.lastEdited | formatDate}}</span>
-                <br />
+                <br>
               </v-flex>
             </v-layout>
           </v-container>
@@ -22,7 +22,7 @@
               v-for="category in post.categories"
               :key="category.id"
             >{{category.name}}&nbsp;</span>
-            <br />
+            <br>
             <span v-html="post.body"></span>
           </div>
           <span
@@ -32,11 +32,11 @@
           >By {{post.user.name}}</span>
         </v-card-text>
         <v-card-actions>
-          <v-btn v-if="isOwner" flat icon>
+          <v-btn v-if="isEditor" flat icon>
             <v-icon @click="editPost(post.id)">edit</v-icon>
-            <editPost :post="post" />
+            <editPost :post="post"/>
           </v-btn>
-          <v-btn v-if="isOwner" flat icon>
+          <v-btn v-if="isEditor" flat icon>
             <v-icon @click="deleteModal = true">delete</v-icon>
           </v-btn>
         </v-card-actions>
@@ -52,14 +52,14 @@
         <v-card class="mt-4 mb-5" v-if="!isComment">
           <v-card-text>
             Theres no comments yet.
-            <br />
+            <br>
           </v-card-text>
         </v-card>
         <v-card class="mt-4 mb-3" v-for="comment in comments" :key="comment.id">
           <v-card-text>
             <div>
               {{comment.body}}
-              <br />
+              <br>
               <span class="grey--text">By {{comment.user.name}}</span>
             </div>
             <span style="margin-left: -17.5px;">
@@ -95,7 +95,7 @@
       </v-card>
     </v-dialog>
 
-    <v-dialog v-model="commentDeleteModal" dark max-width="450px">
+    <v-dialog v-if="isLoggedIn" v-model="commentDeleteModal" dark max-width="450px">
       <v-card>
         <v-card-title
           class="headline grey darken-4 text-xs-center"
@@ -103,11 +103,11 @@
         <v-card-text class="text-xs-center">
           <v-btn @click="DeleteComment()" color="red">yes</v-btn>
           <v-btn @click="commentDeleteModal = false">no</v-btn>
-          <br />
+          <br>
         </v-card-text>
       </v-card>
     </v-dialog>
-    <v-dialog v-model="deleteModal" dark max-width="450px">
+    <v-dialog v-if="isEditor" v-model="deleteModal" dark max-width="450px">
       <v-card>
         <v-card-title
           class="headline grey darken-4 text-xs-center"
@@ -115,7 +115,7 @@
         <v-card-text class="text-xs-center">
           <v-btn @click="deletePost()" color="red">yes</v-btn>
           <v-btn @click="deleteModal = false">no</v-btn>
-          <br />
+          <br>
         </v-card-text>
       </v-card>
     </v-dialog>
@@ -147,9 +147,10 @@ export default {
     };
   },
   computed: {
-    isOwner() {
-      if (!this.post.user) return false;
-      return this.post.user.id == this.$store.getters.userId;
+    isEditor() {
+      // if (!this.post.user) return false;
+      // return this.post.user.id == this.$store.getters.userId;
+      return this.$store.getters.isEditor;
     },
     isLoggedIn() {
       return this.$store.getters.isLoggedIn;
