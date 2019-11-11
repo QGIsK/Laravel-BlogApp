@@ -189,8 +189,8 @@ export default {
         return this.$store.getters.posts;
       }
     },
-    isAdmin() {
-      return this.$store.getters.isAdmin;
+    isEditor() {
+      return this.$store.getters.isEditor;
     }
   },
   methods: {
