@@ -2,12 +2,6 @@
   <v-navigation-drawer v-model="drawer" fixed clipped app>
     <v-list dense>
       <span>
-        <!-- <v-list-tile mt-3>
-					<v-flex >
-						<v-text-field label="Search"  prepend-inner-icon="search"></v-text-field>
-					</v-flex>
-
-        </v-list-tile>-->
         <v-list-tile v-for="item in sideBarItems" :key="item.text" @click="item.method">
           <v-list-tile-action>
             <v-icon>{{item.icon}}</v-icon>
@@ -52,14 +46,6 @@
       </span>
       <v-flex xs-12 align-nd flexbox>
         <v-list-tile>&copy; {{ new Date().getFullYear() }} All rights reserved</v-list-tile>
-        <v-list-tile class="grey--text">
-          <span style="cursor: pointer" @click="redirect('/legal/privacy-policy')">Privacy Policy</span>
-          &nbsp;-&nbsp;
-          <span
-            style="cursor: pointer"
-            @click="redirect('legal/terms-of-service')"
-          >Terms of Service</span>
-        </v-list-tile>
       </v-flex>
     </v-list>
   </v-navigation-drawer>
@@ -67,40 +53,40 @@
 
 <script>
 export default {
-    name: "sideNav",
-    components: {},
-    data() {
-        const self = this;
-        return {
-            drawer: null,
-            sideBarItems: [
-                {
-                    icon: "sort",
-                    text: "Filter Posts",
-                    method() {
-                        self.$router.push("/post/filter");
-                    },
-                },
-            ],
-        };
+  name: "sideNav",
+  components: {},
+  data() {
+    const self = this;
+    return {
+      drawer: null,
+      sideBarItems: [
+        {
+          icon: "sort",
+          text: "Filter Posts",
+          method() {
+            self.$router.push("/post/filter");
+          }
+        }
+      ]
+    };
+  },
+  computed: {
+    Posts: {
+      get() {
+        return this.$store.getters.posts;
+      }
+    }
+  },
+  methods: {
+    postRedirect(id) {
+      this.$router.push(`/post/${id}`);
     },
-    computed: {
-        Posts: {
-            get() {
-                return this.$store.getters.posts;
-            },
-        },
+    userRedirect(id) {
+      this.$router.push(`/user/${id}`);
     },
-    methods: {
-        postRedirect(id) {
-            this.$router.push(`/post/${id}`);
-        },
-        userRedirect(id) {
-            this.$router.push(`/user/${id}`);
-        },
-        redirect(link) {
-            this.$router.push(link);
-        },
-    },
+    redirect(link) {
+      this.$router.push(link);
+    }
+  }
 };
 </script>
