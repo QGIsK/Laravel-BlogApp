@@ -20,11 +20,6 @@ class CreateUsersTable extends Migration
             $table->string('email')->unique();
             $table->timestamp('email_verified_at')->nullable();
             $table->string('password');
-            $table->string('avatar')->default(" ");
-            $table->string('twitter')->default(" ");
-            $table->string('website')->default(" ");
-            $table->string('github')->default(" ");
-            $table->string('about')->default(" ");
             $table->boolean('weekly_digest')->default(false);
             $table->string('digest_categories')->default(" ");
             $table->rememberToken();
