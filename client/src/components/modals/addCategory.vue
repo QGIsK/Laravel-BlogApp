@@ -137,7 +137,7 @@ export default {
     add() {
       let tag = this.tag;
       this.$http({
-        url: "/api/category/new",
+        url: "/api/category/",
         crossdomain: true,
         data: {
           tag

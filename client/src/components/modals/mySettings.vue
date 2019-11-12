@@ -104,18 +104,16 @@
         <!-- Review Settings -->
         <v-stepper-content step="3">
           <v-card class="mb-5">
-            <v-img class="white--text" height="400px" :src="user.avatar">
-              <v-container fill-height fluid>
-                <v-layout fill-height>
-                  <v-flex xs12 align-end flexbox>
-                    <span class="headline">{{user.name}}</span>
-                  </v-flex>
-                </v-layout>
-              </v-container>
-            </v-img>
-            <v-card-text class="layout justify-center">
+            <v-container fill-height fluid>
+              <v-layout fill-height>
+                <v-flex xs12 align-end flexbox>
+                  <span class="headline">{{user.name}}</span>
+                </v-flex>
+              </v-layout>
+            </v-container>
+            <v-card-text>
               <div>
-                <span>{{user.about}}</span>
+                <span>{{user.email}}</span>
                 <span class="grey--text">
                   <br>
                   Joined: {{user.created_at | formatDate}}
@@ -176,7 +174,7 @@ export default {
   methods: {
     edit() {
       this.$http({
-        url: "/api/user/my/",
+        url: "/api/user/",
         method: "put",
         data: { user: this.user }
       })
@@ -211,9 +209,9 @@ export default {
     //   this.$store.dispatch("toggleSnackBar", payload);
     // },
     getUserData() {
-      this.$http({ url: "/api/user/my", method: "GET" })
+      this.$http({ url: "/api/user/", method: "GET" })
         .then(res => {
-          this.user = res.data.user;
+          this.user = res.data;
         })
         .catch(e => {
           let payload = {

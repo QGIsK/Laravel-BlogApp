@@ -20,7 +20,7 @@
             <span>{{user.about}}</span>
             <span class="grey--text">
               <br>
-              Joined: {{user.join_date | formatDate}}
+              Joined: {{user.created_at | formatDate}}
             </span>
           </div>
         </v-card-text>
@@ -43,7 +43,7 @@
           </v-list-tile-avatar>
           <v-list-tile-content>
             <v-list-tile-title>{{ post.title }}</v-list-tile-title>
-            <v-list-tile-sub-title class="grey--text">Posted {{post.lastEdited | formatDate}}</v-list-tile-sub-title>
+            <v-list-tile-sub-title class="grey--text">Posted {{post.updated_at | formatDate}}</v-list-tile-sub-title>
           </v-list-tile-content>
         </v-list-tile>
       </v-card>
@@ -79,6 +79,7 @@ export default {
         method: "GET"
       }).then(res => {
         this.user = res.data.user;
+        this.userPosts = res.data.posts;
       });
     },
     // getUserPosts(id) {

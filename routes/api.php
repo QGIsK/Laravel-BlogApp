@@ -17,6 +17,16 @@ Route::middleware('auth:api')->get('/user', function (Request $request) {
     return $request->user();
 });
 
+Route::prefix('file')->group(function () {
+    Route::get('/{slug}', 'FileController@index');
+    Route::group(['middleware' => 'auth:api'], function () {
+        Route::Post("/", 'FileController@store');
+    });
+    Route::group(['middleware' => ['auth:api, isAdmin']], function () {
+        Route::delete("/{slug}", 'FileController@delete');
+    });
+});
+
 Route::prefix('auth')->group(function () {
     Route::post('register', 'AuthController@register');
     Route::post('login', 'AuthController@login');
@@ -27,9 +37,11 @@ Route::prefix('auth')->group(function () {
     });
 });
 
-Route::group(['middleware' => 'auth:api'], function () {
-    Route::get('users/my', 'UserController@index');
-    Route::get('users/{user}', 'UserController@show');
+Route::prefix('users')->group(function () {
+    Route::get('/{user}', 'UserController@show');
+    Route::group(['middleware' => ['auth:api', 'isAdminOrSelf']], function () {
+        Route::put('/{user}', 'UserController@update');
+    });
 });
 
 Route::prefix('post')->group(function () {
@@ -45,7 +57,7 @@ Route::prefix('post')->group(function () {
 
 Route::prefix('comment')->group(function () {
     Route::get('/{post}', 'CommentController@index');
-    // Route::get('/{post}/{comment}', 'CommentController@show');
+    // Route::get('/c/{comment}', 'CommentController@show');
 
     Route::group(['middleware' => 'auth:api'], function () {
         Route::post('/{post}', 'CommentController@store');

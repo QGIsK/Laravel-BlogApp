@@ -21,7 +21,6 @@ class CreateUsersTable extends Migration
             $table->timestamp('email_verified_at')->nullable();
             $table->string('password');
             $table->boolean('weekly_digest')->default(false);
-            $table->string('digest_categories')->default(" ");
             $table->rememberToken();
             $table->timestamps();
         });

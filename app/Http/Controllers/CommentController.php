@@ -15,7 +15,7 @@ class CommentController extends Controller
      */
     public function index($post)
     {
-        return CommentResource::collection(Comment::with('user')->where('post', $post)->get());
+        return CommentResource::collection(Comment::where('post', $post)->with('user')->get());
         // Resource::collection(Post::with('user')->get());
     }
 
@@ -33,7 +33,7 @@ class CommentController extends Controller
 
         $comment = Comment::create([
             'body' => $request->body,
-            'user' => $request->user()->id,
+            'user_id' => $request->user()->id,
             'post' => $post
         ]);
 

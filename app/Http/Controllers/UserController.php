@@ -25,11 +25,23 @@ class UserController extends Controller
             200
         );
     }
+
+    public function update(Request $request, User $user)
+    {
+        if (!$request->name) {
+            return response()->json(['error' => 'Please provide all fiels'], 422);
+        }
+        
+        $user->update($request->only(['name', 'weekly_digest']));
+        return new UserResource($user);
+    }
+
     public function show(Request $request, $id)
     {
         $user = User::find($id);
-        $posts = Post::where('user_id', $id);
+        $posts = Post::where('user_id', $id)->get();
         
+        // dd($posts);
         return response()->json(
             [
                 'user' => $user->toArray(),

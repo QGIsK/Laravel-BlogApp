@@ -313,14 +313,14 @@ export default {
         body: this.commentBody
       };
       this.$http({
-        url: `/api/post/${postId}/comment/new`,
+        url: `/api/comment/${postId}`,
         crossdomain: true,
         method: "POST",
         data
       })
         .then(res => {
           this.commentBody = "";
-          this.comments.push(res.data.returnComment);
+          this.comments.push(res.data.data);
           // define payload then trigger snackbar to show user it was successfull
           let payload = {
             type: "success",
