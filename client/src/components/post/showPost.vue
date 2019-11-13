@@ -21,7 +21,7 @@
               class="grey--text"
               v-for="category in post.categories"
               :key="category.id"
-            >{{category.name}}&nbsp;</span>
+            >{{category.tag}}&nbsp;</span>
             <br>
             <span v-html="post.body"></span>
           </div>
@@ -186,6 +186,10 @@ export default {
         url: `/api/comment/${id}`,
         method: "GET"
       }).then(res => {
+        if (res.data.data.length <= 0) {
+          this.comments = [];
+          return;
+        }
         for (let i = 0; i < res.data.data.length; i++) {
           this.comments.push(res.data.data[i]);
         }

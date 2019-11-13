@@ -97,7 +97,12 @@
           <v-subheader style="margin-top: 25px;" class="title">Categories</v-subheader>
           <v-divider></v-divider>
           <v-list-tile v-for="category in allCategories" :key="category.id">
-            <v-switch disabled color="primary darken-3" :label="category.tag" :value="category.id"></v-switch>
+            <v-switch
+              color="primary darken-3"
+              v-model="newCategories"
+              :label="category.tag"
+              :value="category.id"
+            ></v-switch>
           </v-list-tile>
           <!-- v-model="newCategories" -->
           <v-btn flat @click="toggleAddCategoryModal">Update categories</v-btn>
@@ -164,27 +169,27 @@ export default {
         maxFiles: 1,
         headers: { Authorization: localStorage.getItem("token") }
       }
-      // newCategories: this.post.categories.map(a => a.id),
+      // newCategories: this.post.categories.map(a => a.id)
     };
   },
   mounted() {},
   computed: {
-    // newCategories: {
-    //   get() {
-    //     return this.post.categories.map(a => a.id);
-    //   },
-    //   set(val) {
-    //     return val;
-    //   }
-    // },
-    // categories: {
-    //   get() {
-    //     return this.post.categories;
-    //   },
-    //   set(val) {
-    //     return val;
-    //   }
-    // },
+    newCategories: {
+      get() {
+        return this.post.categories.map(a => a.id);
+      },
+      set(val) {
+        return val;
+      }
+    },
+    categories: {
+      get() {
+        return this.post.categories;
+      },
+      set(val) {
+        return val;
+      }
+    },
     allCategories: {
       get() {
         return this.$store.getters.categories;
@@ -236,11 +241,11 @@ export default {
       });
     },
     edit() {
-      // console.log(this.newCategories)
+      console.log(this.newCategories);
       const data = {
         title: this.title,
         body: this.body,
-        // categories: this.post.categories,
+        categories: this.newCategories,
         imageUrl: this.imageUrl
       };
       this.$http({
@@ -253,15 +258,15 @@ export default {
           this.$store.dispatch("toggleEditPostModal");
           this.post.title = data.title;
           this.post.body = data.body;
-          // this.post.categories = [];
-          // for (let i = 0; i < this.newCategories.length; i++) {
-          //   let index = this.allCategories.findIndex(
-          //     x => x.id == this.newCategories[i]
-          //   );
-          //   if (this.allCategories[index].id === this.newCategories[i]) {
-          //     this.post.categories.push(this.allCategories[index]);
-          //   }
-          // }
+          this.post.categories = [];
+          for (let i = 0; i < this.newCategories.length; i++) {
+            let index = this.allCategories.findIndex(
+              x => x.id == this.newCategories[i]
+            );
+            if (this.allCategories[index].id === this.newCategories[i]) {
+              this.post.categories.push(this.allCategories[index]);
+            }
+          }
           // define payload then trigger snackbar to show user it was successfull
           let payload = {
             type: "success",

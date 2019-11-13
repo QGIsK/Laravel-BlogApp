@@ -103,9 +103,9 @@ export default {
     },
     deletePost(post) {
       this.$http({
-        url: `/api/post/${post.id}/delete`,
+        url: `/api/post/${post.id}/`,
         crossdomain: true,
-        method: "GET"
+        method: "DELETE"
       })
         .then(res => {
           this.deleteModal = false;

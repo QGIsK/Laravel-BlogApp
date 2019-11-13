@@ -157,7 +157,8 @@ export default {
       e1: 0,
       title: this.title,
       body: this.body,
-      imagePath: "/public/images/header.jpg",
+      imagePath:
+        "https://images.unsplash.com/photo-1572546156422-d6fb14c8a8a0?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=1350&q=80",
       errors: [],
       categories: [],
       dropzoneOptions: {
@@ -227,8 +228,8 @@ export default {
     async newPost() {
       const data = {
         title: this.title,
-        body: this.body
-        // categories: this.categories,
+        body: this.body,
+        categories: this.categories
         // imageUrl: this.imagePath
       };
       await this.$http({
@@ -243,7 +244,8 @@ export default {
           this.file = "";
           this.title = "";
           this.body = "";
-          this.imagePath = "/public/images/header.jpg";
+          this.imagePath =
+            "https://images.unsplash.com/photo-1572546156422-d6fb14c8a8a0?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=1350&q=80";
           this.categories = [];
           this.e1 = 1;
 

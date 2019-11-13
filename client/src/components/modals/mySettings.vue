@@ -173,10 +173,14 @@ export default {
   },
   methods: {
     edit() {
+      const data = {
+        name: this.user.name,
+        weekly_digest: this.user.weekly_digest ? 1 : 0
+      };
       this.$http({
-        url: "/api/user/",
+        url: `/api/users/${this.user.id}`,
         method: "put",
-        data: { user: this.user }
+        data
       })
         .then(res => {
           this.$store.dispatch("toggleMySettingsModal");
