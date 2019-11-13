@@ -10,21 +10,21 @@ use App\Http\Resources\PostResource;
 
 class UserController extends Controller
 {
-    public function index(Request $request)
-    {
-        $user = User::find($request->user()->id);
-        $posts = Post::where('user', $request->user()->id)->get();
+    // public function index(Request $request)
+    // {
+    //     $user = User::find($request->user()->id);
+    //     $posts = Post::where('user', $request->user()->id)->get();
         
 
         
-        return response()->json(
-            [
-                'user' => $user->toArray(),
-                'posts' => $posts->toArray()
-            ],
-            200
-        );
-    }
+    //     return response()->json(
+    //         [
+    //             'user' => $user->toArray(),
+    //             'posts' => $posts->toArray()
+    //         ],
+    //         200
+    //     );
+    // }
 
     public function update(Request $request, User $user)
     {
@@ -38,7 +38,7 @@ class UserController extends Controller
 
     public function show(Request $request, $id)
     {
-        $user = User::find($id);
+        $user = User::select('name', 'id', 'role', 'created_at')->find($id);
         $posts = Post::where('user_id', $id)->get();
         
         // dd($posts);
