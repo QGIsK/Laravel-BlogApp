@@ -41,6 +41,8 @@ class PostController extends Controller
             'image' => $request->image,
         ]);
 
+        $post->categories()->attach($request->categories);
+
         return new PostResource($post);
     }
 
@@ -73,6 +75,9 @@ class PostController extends Controller
         }
 
         $post->update($request->only(['title', 'body', 'image']));
+
+        $post->categories()->sync($request->categories);
+
         return new PostResource($post);
     }
 
