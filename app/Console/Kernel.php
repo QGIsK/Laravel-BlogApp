@@ -16,7 +16,7 @@ class Kernel extends ConsoleKernel
      * @var array
      */
     protected $commands = [
-        //
+        'App\Console\Commands\sendWeeklyDigest'
     ];
 
     /**
@@ -27,11 +27,8 @@ class Kernel extends ConsoleKernel
      */
     protected function schedule(Schedule $schedule)
     {
-        $users = User::select('email', 'name', 'id')->find('weekly_digest', 1);
-        $posts = Post::all();
-
-        dd(users, posts);
-        // ->weeklyOn(1, '8:00');
+       $schedule->command('send:digest')
+        ->weeklyOn(1, '8:00');
     }
 
     /**
