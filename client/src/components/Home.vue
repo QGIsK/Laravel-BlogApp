@@ -38,7 +38,7 @@
                       class="grey--text"
                       v-for="category in post.categories"
                       :key="category.id"
-                    >{{category.name}}&nbsp;</span>
+                    >{{category.tag}}&nbsp;</span>
                     <br>
                     <span v-html="post.body.slice(0, 250)"></span>
                     <span @click="postRedirect(post.id)" style="cursor: pointer" class="grey--text">

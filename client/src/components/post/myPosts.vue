@@ -36,7 +36,7 @@
                         class="grey--text"
                         v-for="category in post.categories"
                         :key="category.id"
-                      >{{category.name}}&nbsp;</span>
+                      >{{category.tag}}&nbsp;</span>
                     </v-flex>
                   </v-layout>
                 </v-container>

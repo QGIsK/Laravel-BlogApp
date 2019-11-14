@@ -256,18 +256,28 @@ export default {
       })
         .then(res => {
           this.$store.dispatch("toggleEditPostModal");
-          this.post.title = data.title;
-          this.post.body = data.body;
-          this.post.categories = [];
-          for (let i = 0; i < this.newCategories.length; i++) {
-            let index = this.allCategories.findIndex(
-              x => x.id == this.newCategories[i]
-            );
-            if (this.allCategories[index].id === this.newCategories[i]) {
-              this.post.categories.push(this.allCategories[index]);
-            }
-          }
-          // define payload then trigger snackbar to show user it was successfull
+
+          this.post = {
+            title: res.data.data.title,
+            body: res.data.data.body,
+            categories: res.data.data.categories,
+            user_id: res.data.data.user_id,
+            user: res.data.data.user,
+            image: res.data.data.image
+          };
+
+          // this.post.title = data.title;
+          // this.post.body = data.body;
+          // this.post.categories = [];
+          // for (let i = 0; i < this.newCategories.length; i++) {
+          //   let index = this.allCategories.findIndex(
+          //     x => x.id == this.newCategories[i]
+          //   );
+          //   if (this.allCategories[index].id === this.newCategories[i]) {
+          //     this.post.categories.push(this.allCategories[index]);
+          //   }
+          // }
+          // // define payload then trigger snackbar to show user it was successfull
           let payload = {
             type: "success",
             text: "Successfully edited your post"

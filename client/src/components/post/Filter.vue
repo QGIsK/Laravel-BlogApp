@@ -40,17 +40,23 @@
                       <br>
                       <span class="grey--text">{{post.createdAt | formatDate}}</span>
                       <br>
-                      <span
-                        class="grey--text"
-                        v-for="category in post.categories"
-                        :key="category.id"
-                      >{{category.tag}}&nbsp;</span>
+                        <!-- <span
+                          class="grey--text"
+                          v-for="category in post.categories"
+                          :key="category.id"
+                        >{{category.tag}}&nbsp;</span>-->
                     </v-flex>
                   </v-layout>
                 </v-container>
               </v-img>
-              <!-- <v-card-actions>
-                <v-spacer></v-spacer>
+              <v-card-actions v-if="post.categories.length > 0">
+                Tags:&nbsp;
+                <span
+                  class="grey--text"
+                  v-for="category in post.categories"
+                  :key="category.id"
+                >{{category.tag}}&nbsp;</span>
+                <!-- <v-spacer></v-spacer>
                 <v-btn icon>
                   <v-icon>favorite</v-icon>
                 </v-btn>
@@ -62,8 +68,8 @@
                 </v-btn>
                 <v-btn icon>
                   <v-icon>bookmark</v-icon>
-                </v-btn>
-              </v-card-actions>-->
+                </v-btn>-->
+              </v-card-actions>
             </v-card>
           </v-flex>
         </v-layout>
