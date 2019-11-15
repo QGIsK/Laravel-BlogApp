@@ -20,6 +20,7 @@ class CreatePostsTable extends Migration
             $table->string("title");
             $table->longText("body");
             $table->string("image")->nullable();
+            $table->softDeletes();
         });
     }
 

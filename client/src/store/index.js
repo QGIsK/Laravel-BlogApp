@@ -138,7 +138,7 @@ export default new Vuex.Store({
                 })
                     .then(resp => {
                         const user = resp.data.user;
-                        const token = resp.data.access_token;
+                        const token = `Bearer ${resp.data.access_token}`;
 
                         let payload = {
                             type: "success",
@@ -174,7 +174,8 @@ export default new Vuex.Store({
                 })
                     .then(resp => {
                         const user = resp.data.user;
-                        const token = resp.data.access_token;
+                        const token = `Bearer ${resp.data.access_token}`;
+
 
                         let payload = {
                             type: "success",

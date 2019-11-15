@@ -1,6 +1,6 @@
 <template>
   <v-layout justify-center>
-    <editPost :post="post"/>
+    <editPost :showPost="post"/>
     <v-dialog v-model="deleteModal" dark max-width="450px">
       <v-card>
         <v-card-title

@@ -162,11 +162,10 @@ export default {
       errors: [],
       categories: [],
       dropzoneOptions: {
-        url: "http://localhost:3000/api/file/upload",
+        url: "http://localhost:8000/api/file/",
         thumbnailWidth: 150,
-        maxFilesize: 5.0,
-        maxFiles: 1,
-        headers: { Authorization: localStorage.getItem("token") }
+        maxFilesize: 7.5,
+        headers: { Authorization: `Bearer ${localStorage.getItem("token")}` }
       }
     };
   },
@@ -204,7 +203,7 @@ export default {
       this.$store.dispatch("toggleSnackBar", payload);
 
       // console.log(file, response.path);
-      this.imagePath = response.path;
+      this.imagePath = response.url;
     },
     fileError(file, message, xhr) {
       let payload = {
@@ -229,8 +228,8 @@ export default {
       const data = {
         title: this.title,
         body: this.body,
-        categories: this.categories
-        // imageUrl: this.imagePath
+        categories: this.categories,
+        image: this.imagePath
       };
       await this.$http({
         url: "/api/post/",

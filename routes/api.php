@@ -20,7 +20,7 @@ Route::middleware('auth:api')->get('/user', function (Request $request) {
 Route::prefix('file')->group(function () {
     Route::get('/{slug}', 'FileController@index');
     Route::group(['middleware' => 'auth:api'], function () {
-        Route::Post("/", 'FileController@store');
+        Route::post("/", 'FileController@store');
     });
     Route::group(['middleware' => ['auth:api, isAdmin']], function () {
         Route::delete("/{slug}", 'FileController@delete');

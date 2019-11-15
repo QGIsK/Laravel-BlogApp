@@ -163,11 +163,11 @@ export default {
       e1: 0,
       errors: [],
       dropzoneOptions: {
-        url: "http://localhost:3000/api/file/upload",
+        url: "http://localhost:8000/api/file/",
         thumbnailWidth: 150,
         maxFilesize: 5.0,
         maxFiles: 1,
-        headers: { Authorization: localStorage.getItem("token") }
+        headers: { Authorization: `Bearer ${localStorage.getItem("token")}` }
       }
       // newCategories: this.post.categories.map(a => a.id)
     };
@@ -176,10 +176,19 @@ export default {
   computed: {
     newCategories: {
       get() {
+        console.log(this.post.categories.map(a => a.id));
         return this.post.categories.map(a => a.id);
       },
       set(val) {
-        return val;
+        console.log("val", val);
+        let temp = [];
+        val.forEach(v => {
+          let i = this.allCategories.findIndex(x => x.id === v);
+
+          temp.push(this.allCategories[i]);
+        });
+        this.post.categories = temp;
+        return temp;
       }
     },
     categories: {
@@ -219,7 +228,7 @@ export default {
       this.$store.dispatch("toggleSnackBar", payload);
 
       // console.log(file, response.path);
-      this.imageUrl = response.path;
+      this.imageUrl = response.url;
     },
     fileError(file, message, xhr) {
       let payload = {
@@ -232,21 +241,13 @@ export default {
     toggleAddCategoryModal() {
       this.$store.commit("toggleAddCategoryModal");
     },
-    togglePreviewModal() {
-      this.$store.dispatch("togglePreviewModal", {
-        post: {
-          title: this.post.title,
-          body: this.post.body
-        }
-      });
-    },
     edit() {
       console.log(this.newCategories);
       const data = {
         title: this.title,
         body: this.body,
         categories: this.newCategories,
-        imageUrl: this.imageUrl
+        image: this.imageUrl
       };
       this.$http({
         url: `/api/post/${this.post.id}/`,
@@ -257,18 +258,16 @@ export default {
         .then(res => {
           this.$store.dispatch("toggleEditPostModal");
 
-          this.post = {
-            title: res.data.data.title,
-            body: res.data.data.body,
-            categories: res.data.data.categories,
-            user_id: res.data.data.user_id,
-            user: res.data.data.user,
-            image: res.data.data.image
-          };
+          // this.post = {
+          //   id: res.data.data.id,
+          //   title: res.data.data.title,
+          //   body: res.data.data.body,
+          //   categories: res.data.data.categories,
+          //   user_id: res.data.data.user_id,
+          //   user: res.data.data.user,
+          //   image: res.data.data.image
+          // };
 
-          // this.post.title = data.title;
-          // this.post.body = data.body;
-          // this.post.categories = [];
           // for (let i = 0; i < this.newCategories.length; i++) {
           //   let index = this.allCategories.findIndex(
           //     x => x.id == this.newCategories[i]
@@ -286,7 +285,7 @@ export default {
 
           // Update global posts array
           let i = this.posts.findIndex(x => x.id == res.data.post.id);
-          this.posts[i] = res.data.post;
+          this.posts[i] = res.data.data;
         })
         .catch(e => {
           // define payload then trigger snackbar to show user it was successfull

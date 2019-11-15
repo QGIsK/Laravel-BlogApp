@@ -3,6 +3,8 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Storage;
+
 
 class FileController extends Controller
 {
@@ -27,24 +29,25 @@ class FileController extends Controller
         $uploadedFile = $request->file('file');
         $filename = time().$uploadedFile->getClientOriginalName();
 
-        Storage::disk('local')->putFileAs(
-            'files/'.$filename,
-            $uploadedFile,
-            $filename
-        );
 
-        $upload = new Upload;
-        $upload->filename = $filename;
+        // Storage::disk('local')->putFileAs(
+        //     'files/',
+        //     $uploadedFile,
+        //     $filename
+        // );
 
-        $upload->user()->associate(auth()->user());
+        Storage::putFileAs('images/', $uploadedFile, $filename);
 
-        $upload->save();
+
+
+        $url = env('APP_URL') . ':8000/storage/images/' . $filename;
+
 
         return response()->json([
-        'id' => $upload->id
+        'url' => $url
       ]);
     }
-
+    
     /**
      * Display the specified resource.
      *
